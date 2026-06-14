@@ -18,7 +18,7 @@ class hanoip83Recipe(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
 
     # Sources are located in the same place as this recipe, copy them to the recipe
-    exports_sources = "CMakeLists.txt", "src/*"
+    # exports_sources = "CMakeLists.txt", "src/*"
 
     def requirements(self):
         self.requires("raylib/5.5")
@@ -38,9 +38,9 @@ class hanoip83Recipe(ConanFile):
         cmake.configure()
         cmake.build()
 
-    def package(self):
-        cmake = CMake(self)
-        cmake.install()
+    # def package(self):
+    #     cmake = CMake(self)
+    #     cmake.install()
 
     
 
