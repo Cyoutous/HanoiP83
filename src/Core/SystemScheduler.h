@@ -21,10 +21,12 @@ class SystemScheduler {
 public:
 
     SystemScheduler(entt::registry& reg, Resource& res);
-
+    ~SystemScheduler() = default;
+    
     void add(std::unique_ptr<ISystem> sys); //添加系统
     void enterScene(std::string_view name); //进入场景
     void runLogic(); //执行逻辑系统
+    void runFixedUpdate(); //执行定长系统
     void runRender(); //执行渲染系统
 
 };

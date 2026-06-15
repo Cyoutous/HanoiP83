@@ -3,12 +3,14 @@
 
 #include <entt/entt.hpp>
 #include "Resource.h"
+#include "SystemScheduler.h"
 
 class App {
 
     entt::registry reg;
     Resource res;
-    //...
+    
+    SystemScheduler scheduler;
 
 public:
     App();

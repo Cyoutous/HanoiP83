@@ -4,14 +4,18 @@
 #include <string>
 #include <vector>
 
-namespace entt {
-    class registry;
-}
+#include <entt/entity/fwd.hpp>
+
 class Resource;
 
 enum Phase {
-    Logic, Render
+    Logic, FixedUpdate, Render
 }; //逻辑帧执行或者渲染帧执行
+/*
+- Logic：输入、AI 决策、UI 逻辑，每渲染帧跑一次
+- FixedUpdate：物理、移动、碰撞，按固定步长跑，一帧可能跑多次
+- Render：绘制，每渲染帧跑一次，带插值因子
+*/
 
 class ISystem {
 
