@@ -2,4 +2,4 @@ build/
 
 CMakeUserPresets.json
 
-run_complie.sh
+run_compile.sh
