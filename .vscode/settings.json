@@ -3,7 +3,7 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "C_Cpp.default.includePath": [
         "C:/Users/likal/.conan2/p/entt66a43c2152748/p/include",
-        "C:/Users/likal/.conan2/p/rayli17fdc3b0564fd/p/include"
+        "C:/Users/likal/.conan2/p/b/rayli17fdc3b0564fd/p/include"
     ],
     "accessibility.signals.chatResponseReceived": {
         "sound": "off"
