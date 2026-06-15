@@ -15,11 +15,17 @@ struct WindowState
     RenderTexture2D target; // 渲染目标
 
     WindowState();
+    ~WindowState();
     void update();
 };
 
 WindowState::WindowState() {
     target = LoadRenderTexture(logicWidth, logicHeight);
+    update();
+}
+
+WindowState::~WindowState() {
+    UnloadRenderTexture(target);
 }
 
 void WindowState::update() {

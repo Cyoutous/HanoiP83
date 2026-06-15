@@ -15,7 +15,7 @@ enum Phase {
 
 class ISystem {
 
-    bool enabled_status = false;
+    bool enabledStatus = false;
 
 public:
 
@@ -26,12 +26,12 @@ public:
     virtual std::vector<std::string_view> scenes() const { return {"gameplay"}; } //所属游戏场景
     virtual Phase phase() const { return Phase::Logic; } //执行时机
 
-    virtual void on_start(entt::registry& reg, Resource& res) {};
-    virtual void on_update(entt::registry& reg, Resource& res) = 0;
-    virtual void on_stop(entt::registry& reg, Resource& res) {};
+    virtual void onStart(entt::registry& reg, Resource& res) {};
+    virtual void onUpdate(entt::registry& reg, Resource& res) = 0;
+    virtual void onStop(entt::registry& reg, Resource& res) {};
 
-    bool enabled() const { return enabled_status; }
-    void set_enabled(bool value) { enabled_status = value; }
+    bool enabled() const { return enabledStatus; }
+    void setEnabled(bool value) { enabledStatus = value; }
 };
 
 #endif
