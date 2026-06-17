@@ -2,6 +2,6 @@
 
 #include <unordered_map>
 
-struct BestRecords {
+struct BestRecord {
     std::unordered_map<int, int> record;  // diskCount → bestSteps
 };
