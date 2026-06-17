@@ -15,18 +15,23 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 add_executable(hanoip83 WIN32 ${SOURCES})
 
 if(MSVC)
-    target_link_options(hanoip83 PRIVATE "/ENTRY:mainCRTStartup")
+target_link_options(hanoip83 PRIVATE "/ENTRY:mainCRTStartup")
 endif()
 
 target_include_directories(hanoip83 PRIVATE src)
 
 target_link_libraries(hanoip83 PRIVATE
-    raylib
-    EnTT::EnTT
+raylib
+EnTT::EnTT
+)
+
+add_custom_command(TARGET hanoip83 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:hanoip83>/assets"
 )
 
 install(TARGETS hanoip83 DESTINATION "."
-        RUNTIME DESTINATION bin
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
+RUNTIME DESTINATION bin
+ARCHIVE DESTINATION lib
+LIBRARY DESTINATION lib
         )
