@@ -22,6 +22,7 @@
 #include "Component/PendingSetting.h"
 #include "Component/HistoryEntry.h"
 
+#include "Component/Tags.h"
 
 EntityFactory::EntityFactory(entt::registry& reg, Resource& res) 
     : reg(reg), res(res) {}
