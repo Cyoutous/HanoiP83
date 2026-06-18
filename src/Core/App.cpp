@@ -7,6 +7,8 @@
 #include "System/TestRenderSystem.h"
 #include "System/InputSystem.h"
 #include "System/ButtonSystem.h"
+#include "System/SessionStateUpdateSystem.h"
+
 #include "System/TweenSystem.h"
 
 #include "Component/Position.h"
@@ -17,6 +19,7 @@ App::App()
     //注册System
     scheduler.add(std::make_unique<InputSystem>()); // 必须第一个首先添加！
     scheduler.add(std::make_unique<ButtonSystem>());
+    scheduler.add(std::make_unique<SessionStateUpdateSystem>());
 
     scheduler.add(std::make_unique<TweenSystem>());
     
@@ -42,8 +45,8 @@ void App::run() {
         if (res.accumulator > 0.2f) res.accumulator = 0.2f;  // 防螺旋
 
         // - 执行逻辑系统 - 
-        res.events.update(); //刷新事件
         scheduler.runLogic();
+        res.events.update(); //刷新事件
 
         // - 执行固定步长系统 - 
         while (res.accumulator >= res.fixedDt) {
