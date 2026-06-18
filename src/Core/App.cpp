@@ -3,6 +3,8 @@
 #include "raylib.h"
 
 #include "System/TestRenderSystem.h"
+#include "System/InputSystem.h"
+#include "System/TweenSystem.h"
 
 #include "Component/Position.h"
 #include "Component/StaticSprite.h"
@@ -10,9 +12,11 @@
 App::App()
     : reg(), res(reg), scheduler(reg, res) {
     //注册System
-    scheduler.add(std::make_unique<TestRenderSystem>());
-    scheduler.enterScene("gameplay");
+    scheduler.add(std::make_unique<InputSystem>()); // 必须第一个首先添加！
 
+    scheduler.add(std::make_unique<TweenSystem>());
+    scheduler.enterScene("gameplay");
+    
 }
 
 void App::run() {

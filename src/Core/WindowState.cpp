@@ -23,3 +23,10 @@ void WindowState::update() {
         (float)(actualHeight - (int)(logicHeight * scale)) / 2
     };
 }
+
+Vector2 WindowState::toLogic(float screenX, float screenY) const {
+    return {
+        (screenX - offset.x) / scale,
+        (screenY - offset.y) / scale
+    };
+}

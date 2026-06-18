@@ -16,6 +16,7 @@ struct WindowState
 
     WindowState();
     ~WindowState();
+    Vector2 toLogic(float screenX, float screenY) const;
     void update();
 };
 
