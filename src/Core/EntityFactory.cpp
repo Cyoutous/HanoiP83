@@ -11,7 +11,6 @@
 #include "Component/Interpolated.h"
 #include "Component/SessionState.h"
 #include "Component/BestRecord.h"
-#include "Component/Serializable.h" 
 
 #include "Component/ButtonState.h"
 #include "Component/ToggleState.h"
@@ -38,7 +37,6 @@ entt::entity EntityFactory::createNeedle(float x, float y, int index) {
     reg.emplace<NeedleState>(entity);
     reg.emplace<NeedleStack>(entity);
     reg.emplace<NeedleIndex>(entity, index);
-    reg.emplace<Serializable>(entity);          // 存档恢复柱子上的盘子排列
     return entity;
 }
 
@@ -65,7 +63,6 @@ float EntityFactory::diskWidth(int diskIndex, int totalDisks) const {
 entt::entity EntityFactory::createSessionState(int diskCount) {
     auto entity = reg.create();
     reg.emplace<SessionState>(entity, diskCount, 0, false, false);
-    reg.emplace<Serializable>(entity);
     return entity;
 }
 
@@ -73,7 +70,6 @@ entt::entity EntityFactory::createSessionState(int diskCount) {
 entt::entity EntityFactory::createBestRecord() {
     auto entity = reg.create();
     reg.emplace<BestRecord>(entity);
-    reg.emplace<Serializable>(entity);
     return entity;
 }
 
@@ -151,7 +147,6 @@ entt::entity EntityFactory::createOverlay() {
 entt::entity EntityFactory::createSettings() {
     auto entity = reg.create();
     reg.emplace<Settings>(entity);
-    reg.emplace<Serializable>(entity);
     return entity;
 }
 
@@ -160,6 +155,5 @@ entt::entity EntityFactory::createHistoryEntry(int diskCount, int steps,
                                                 bool completed, const std::string& timestamp) {
     auto entity = reg.create();
     reg.emplace<HistoryEntry>(entity, HistoryEntry{diskCount, steps, completed, timestamp});
-    reg.emplace<Serializable>(entity);
     return entity;
 }
