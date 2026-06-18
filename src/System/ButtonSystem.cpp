@@ -8,7 +8,7 @@
 #include "Event/ToggleChangedEvent.h"
 
 std::string_view ButtonSystem::name() const { 
-    return "button"; 
+    return "buttonSystem"; 
 }
 
 Phase ButtonSystem::phase() const { 

@@ -9,7 +9,7 @@
 #include "Component/InputResponse.h"
 
 std::string_view InputSystem::name() const {
-    return "input"; 
+    return "inputSystem"; 
 }
 
 Phase InputSystem::phase() const { 
