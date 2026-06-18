@@ -2,6 +2,8 @@
 
 #include "raylib.h"
 
+#include "Core/SceneSetup.h"
+
 #include "System/TestRenderSystem.h"
 #include "System/InputSystem.h"
 #include "System/ButtonSystem.h"
@@ -17,6 +19,8 @@ App::App()
     scheduler.add(std::make_unique<ButtonSystem>());
 
     scheduler.add(std::make_unique<TweenSystem>());
+    
+    SceneSetup::build(reg, res);
     scheduler.enterScene("gameplay");
     
 }
