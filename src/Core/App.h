@@ -3,6 +3,7 @@
 
 #include <entt/entt.hpp>
 #include "Resource.h"
+#include "EntityFactory.h"
 #include "SystemScheduler.h"
 
 class App {

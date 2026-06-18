@@ -1,18 +1,17 @@
 #pragma once 
 
 #include <entt/entt.hpp>
+#include "raylib.h"
 
-#include "Resource.h"
 #include "Component/Panel.h"
 
 class EntityFactory {
 
     entt::registry& reg;
-    Resource& res;
 
 public:
 
-    EntityFactory(entt::registry& reg, Resource& res);
+    EntityFactory(entt::registry& reg);
     ~EntityFactory() = default;
 
     entt::entity createNeedle(float x, float y, int index);

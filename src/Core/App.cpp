@@ -8,15 +8,11 @@
 #include "Component/StaticSprite.h"
 
 App::App()
-    : reg(), scheduler(reg, res) {
+    : reg(), res(reg), scheduler(reg, res) {
     //注册System
     scheduler.add(std::make_unique<TestRenderSystem>());
-
     scheduler.enterScene("gameplay");
 
-    auto test = reg.create();
-    reg.emplace<Position>(test, 100.0f, 100.0f);
-    reg.emplace<StaticSprite>(test, LoadTexture("assets/Texture/shift_weak_power.png"), 256.0f, 256.0f);
 }
 
 void App::run() {

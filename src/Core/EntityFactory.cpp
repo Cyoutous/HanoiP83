@@ -24,8 +24,8 @@
 
 #include "Component/Tags.h"
 
-EntityFactory::EntityFactory(entt::registry& reg, Resource& res) 
-    : reg(reg), res(res) {}
+EntityFactory::EntityFactory(entt::registry& reg) 
+    : reg(reg) {}
 
 
 // 柱子
