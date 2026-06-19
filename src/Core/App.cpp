@@ -11,9 +11,10 @@
 #include "System/NeedleInteractionSystem.h"
 #include "System/PanelSystem.h"
 #include "System/IndicatorSystem.h"
-#include "System/MoveSnapshotSystem.h"
 
 #include "System/TweenSystem.h"
+#include "System/MoveSnapshotSystem.h"
+#include "System/MoveExecutionSystem.h"
 
 #include "Component/Position.h"
 #include "Component/StaticSprite.h"
@@ -27,9 +28,10 @@ App::App()
     scheduler.add(std::make_unique<NeedleInteractionSystem>());
     scheduler.add(std::make_unique<PanelSystem>());
     scheduler.add(std::make_unique<IndicatorSystem>());
-    scheduler.add(std::make_unique<MoveSnapshotSystem>());
-
+    
     scheduler.add(std::make_unique<TweenSystem>());
+    scheduler.add(std::make_unique<MoveSnapshotSystem>());
+    scheduler.add(std::make_unique<MoveExecutionSystem>());
     
     SceneSetup::build(reg, res);
     scheduler.enterScene("gameplay");
