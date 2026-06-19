@@ -10,6 +10,7 @@
 #include "Component/DiskData.h"
 #include "Component/Interpolated.h"
 #include "Component/SessionState.h"
+#include "Component/NextSessionConfig.h"
 #include "Component/BestRecord.h"
 
 #include "Component/ButtonState.h"
@@ -63,6 +64,12 @@ float EntityFactory::diskWidth(int diskIndex, int totalDisks) const {
 entt::entity EntityFactory::createSessionState(int diskCount) {
     auto entity = reg.create();
     reg.emplace<SessionState>(entity, diskCount, 0, false, false);
+    return entity;
+}
+
+entt::entity EntityFactory::createNextSessionConfig() {
+    auto entity = reg.create();
+    reg.emplace<NextSessionConfig>(entity, 5, false);
     return entity;
 }
 

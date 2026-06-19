@@ -7,6 +7,7 @@
 #include "Core/Resource.h"
 #include "Core/EntityFactory.h"
 #include "Component/SessionState.h"
+#include "Component/NextSessionConfig.h"
 #include "Component/NeedleStack.h"
 #include "Component/NeedleIndex.h"
 #include "Component/Position.h"
@@ -38,7 +39,7 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
     auto oldSessionEntity = *sessionView.begin();
     auto& oldSession = reg.get<SessionState>(oldSessionEntity);
 
-    // ── 写历史 ──
+    // ── 写历史（非自动演示） ──
     if (!oldSession.isAutoDemo) {
         auto now = std::chrono::system_clock::now();
         auto time = std::chrono::system_clock::to_time_t(now);
@@ -50,18 +51,20 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
         );
     }
 
-    // ── 读 Tag 定新配置 ──
+    // ── 读 NextSessionConfig ──
+    auto nextView = reg.view<NextSessionConfig>();
     int newDiskCount = oldSession.diskCount;
-    if (reg.all_of<DiskCountChangedTag>(oldSessionEntity)) {
-        newDiskCount = oldSession.diskCount; // TODO: 这个值需来自实际修改后的数字
+    bool newAutoDemo = false;
+    if (nextView.begin() != nextView.end()) {
+        auto& next = reg.get<NextSessionConfig>(*nextView.begin());
+        newDiskCount = next.diskCount;
+        newAutoDemo = next.autoDemo;
+        next.autoDemo = false;  // 消耗掉自动演示标记
     }
-
-    bool newAutoDemo = reg.all_of<NextAutoDemoTag>(oldSessionEntity);
 
     // ── 销毁旧盘子 ──
     auto disks = reg.view<const DiskData>();
-    std::vector<entt::entity> toDestroy(disks.begin(), disks.end());
-    for (auto entity : toDestroy) {
+    for (auto entity : disks) {
         reg.destroy(entity);
     }
 
@@ -74,7 +77,7 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
     auto& newSession = reg.get<SessionState>(newSessionEntity);
     newSession.isAutoDemo = newAutoDemo;
 
-    // ── 找左柱，重建盘子 ──
+    // ── 左柱重建盘子 ──
     auto needleView = reg.view<const NeedleIndex>();
     entt::entity leftNeedle = entt::null;
     for (auto [entity, idx] : needleView.each()) {
@@ -88,9 +91,7 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
 
         for (int i = 0; i < newDiskCount; i++) {
             int diskIndex = i;
-            float baseY = leftPos.y + 129.0f;
-            float diskY = baseY - i * 22.0f;
-
+            float diskY = leftPos.y + 129.0f - i * 22.0f;
             auto disk = factory.createDisk(leftPos.x, diskY, diskIndex, newDiskCount);
             leftStack.disks.push_back(disk);
         }

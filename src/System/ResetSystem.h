@@ -16,7 +16,6 @@ public:
 
     std::string_view name() const override;
     Phase phase() const override;
-    
     void onStart(entt::registry& reg, Resource& res) override;
     void onUpdate(entt::registry& reg, Resource& res) override;
 
