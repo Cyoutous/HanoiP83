@@ -15,6 +15,7 @@
 #include "System/TweenSystem.h"
 #include "System/MoveSnapshotSystem.h"
 #include "System/MoveExecutionSystem.h"
+#include "System/GamePhaseSystem.h"
 
 #include "Component/Position.h"
 #include "Component/StaticSprite.h"
@@ -32,6 +33,9 @@ App::App()
     scheduler.add(std::make_unique<TweenSystem>());
     scheduler.add(std::make_unique<MoveSnapshotSystem>());
     scheduler.add(std::make_unique<MoveExecutionSystem>());
+    scheduler.add(std::make_unique<GamePhaseSystem>());
+    
+    //scheduler.add(std::make_unique<>());
     
     SceneSetup::build(reg, res);
     scheduler.enterScene("gameplay");
