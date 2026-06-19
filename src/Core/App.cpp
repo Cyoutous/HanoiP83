@@ -8,6 +8,7 @@
 #include "System/InputSystem.h"
 #include "System/ButtonSystem.h"
 #include "System/SessionStateUpdateSystem.h"
+#include "System/NeedleInteractionSystem.h"
 
 #include "System/TweenSystem.h"
 
@@ -20,6 +21,7 @@ App::App()
     scheduler.add(std::make_unique<InputSystem>()); // 必须第一个首先添加！
     scheduler.add(std::make_unique<ButtonSystem>());
     scheduler.add(std::make_unique<SessionStateUpdateSystem>());
+    scheduler.add(std::make_unique<NeedleInteractionSystem>());
 
     scheduler.add(std::make_unique<TweenSystem>());
     

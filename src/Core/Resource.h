@@ -2,9 +2,11 @@
 #define RESOURCE_H
 
 #include <entt/entt.hpp>
+#include <queue>
 
 #include "WindowState.h"
 #include "EntityFactory.h"
+#include "Type/moveAction.h"
 
 struct Resource
 {
@@ -12,6 +14,8 @@ struct Resource
     entt::dispatcher events;
     WindowState windowState;
     EntityFactory  factory;
+
+    std::queue<MoveAction> actionQueue;
 
     float dt          = 0;             // 渲染帧间隔
     float fixedDt     = 1.0f / 60.0f;  // 逻辑步长
