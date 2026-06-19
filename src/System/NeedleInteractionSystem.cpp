@@ -28,7 +28,7 @@ bool NeedleInteractionSystem::canMove(entt::registry& reg, entt::entity from, en
 
     auto& movedDisk = reg.get<DiskData>(fromStack.disks.back());
     auto& topDisk   = reg.get<DiskData>(toStack.disks.back());
-    return movedDisk.size < topDisk.size;
+    return movedDisk.size > topDisk.size;
 }
 
 void NeedleInteractionSystem::floatTopDisk(entt::registry& reg, entt::entity needle) {
