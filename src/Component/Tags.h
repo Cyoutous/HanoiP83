@@ -17,3 +17,6 @@ struct PanelCloseTag     {};
 struct SettingsConfirmTag {};
 struct SettingsCancelTag {};
 struct CloseButtonTag    {};
+
+struct DiskCountIndicatorTag {};
+struct AutoDemoIndicatorTag {};

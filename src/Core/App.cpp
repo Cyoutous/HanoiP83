@@ -10,6 +10,8 @@
 #include "System/SessionStateUpdateSystem.h"
 #include "System/NeedleInteractionSystem.h"
 #include "System/PanelSystem.h"
+#include "System/IndicatorSystem.h"
+#include "System/MoveSnapshotSystem.h"
 
 #include "System/TweenSystem.h"
 
@@ -24,6 +26,8 @@ App::App()
     scheduler.add(std::make_unique<SessionStateUpdateSystem>());
     scheduler.add(std::make_unique<NeedleInteractionSystem>());
     scheduler.add(std::make_unique<PanelSystem>());
+    scheduler.add(std::make_unique<IndicatorSystem>());
+    scheduler.add(std::make_unique<MoveSnapshotSystem>());
 
     scheduler.add(std::make_unique<TweenSystem>());
     
