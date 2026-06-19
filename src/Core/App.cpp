@@ -18,6 +18,7 @@
 #include "System/GamePhaseSystem.h"
 #include "System/AutoDemoSystem.h"
 #include "System/ResetSystem.h"
+#include "System/NextSessionConfigSystem.h"
 
 #include "Component/Position.h"
 #include "Component/StaticSprite.h"
@@ -38,6 +39,7 @@ App::App()
     scheduler.add(std::make_unique<GamePhaseSystem>());
     scheduler.add(std::make_unique<AutoDemoSystem>());
     scheduler.add(std::make_unique<ResetSystem>());
+    scheduler.add(std::make_unique<NextSessionConfigSystem>());
 
     //scheduler.add(std::make_unique<>());
     
