@@ -20,6 +20,8 @@
 #include "System/ResetSystem.h"
 #include "System/NextSessionConfigSystem.h"
 
+#include "System/RectRenderSystem.h"
+
 #include "Component/Position.h"
 #include "Component/StaticSprite.h"
 
@@ -40,6 +42,8 @@ App::App()
     scheduler.add(std::make_unique<AutoDemoSystem>());
     scheduler.add(std::make_unique<ResetSystem>());
     scheduler.add(std::make_unique<NextSessionConfigSystem>());
+
+    scheduler.add(std::make_unique<RectRenderSystem>());
 
     //scheduler.add(std::make_unique<>());
     
