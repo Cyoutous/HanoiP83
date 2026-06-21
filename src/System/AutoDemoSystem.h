@@ -8,6 +8,7 @@ class AutoDemoSystem : public ISystem {
     
     int _moveIndex = 0;
     int _totalDisks = 0;
+    float _delayTimer = 0.0f;
     entt::entity _smallest = entt::null;
     
     void init(entt::registry& reg);

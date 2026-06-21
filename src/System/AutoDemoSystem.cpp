@@ -126,6 +126,12 @@ void AutoDemoSystem::onUpdate(entt::registry& reg, Resource& res) {
     // 动画还在跑 → 等
     if (hasActiveAnimation(reg)) return;
 
+    // 步间延迟
+    if (_delayTimer > 0.0f) {
+        _delayTimer -= res.fixedDt;
+        return;
+    }
+
     // 首次 → 初始化
     if (_moveIndex == 0) init(reg);
 
@@ -151,6 +157,8 @@ void AutoDemoSystem::onUpdate(entt::registry& reg, Resource& res) {
         ma.fromPillar = from;
         ma.toPillar   = to;
         res.actionQueue.push(ma);
+
+        _delayTimer = 0.10f;   // 步间停 0.15 秒
     }
     // ── 偶数步：非最小盘的唯一合法移动 ──
     else {
@@ -163,6 +171,8 @@ void AutoDemoSystem::onUpdate(entt::registry& reg, Resource& res) {
         ma.fromPillar = from;
         ma.toPillar   = to;
         res.actionQueue.push(ma);
+
+        _delayTimer = 0.10f;   // 步间停 0.15 秒
     }
 
     _moveIndex++;
