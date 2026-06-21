@@ -65,6 +65,16 @@ void NeedleInteractionSystem::deselectNeedle(entt::registry& reg) {
     _selectedNeedle = entt::null;
 }
 
+bool NeedleInteractionSystem::hasActiveAnimation(entt::registry& reg) const {
+    auto view = reg.view<const DiskData>();
+    for (auto entity : view) {
+        if (reg.all_of<TweenPosition>(entity) || reg.all_of<TweenSequence>(entity))
+            return true;
+    }
+    return false;
+}
+
+
 // ---------- 主体 ----------
 
 void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
@@ -79,6 +89,8 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
             return;
         }
     }
+
+    if (hasActiveAnimation(reg)) return;
 
     // 自动恢复定时器
     auto stateView = reg.view<NeedleState>();
@@ -126,12 +138,14 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
             targetState.visual = NeedleVisual::Selected;
             targetState.autoDeselectTimer = 0.15f;
 
-            landTopDisk(reg, _selectedNeedle);  // 落回
+            //landTopDisk(reg, _selectedNeedle);  // 落回
 
             // 塞 MoveAction
-            auto& fromStack = reg.get<NeedleStack>(_selectedNeedle);
+            auto disk = reg.get<NeedleStack>(_selectedNeedle).disks.back();
+            reg.remove<TweenPosition, TweenSequence>(disk);
+
             MoveAction action;
-            action.disk = fromStack.disks.back();
+            action.disk = disk;
             action.fromPillar = _selectedNeedle;
             action.toPillar = entity;
             res.actionQueue.push(action);

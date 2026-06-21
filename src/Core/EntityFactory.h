@@ -22,7 +22,7 @@ public:
     entt::entity createDisk(float x, float y, int diskIndex, int totalDisks);
     float diskWidth(int diskIndex, int totalDisks) const;
     entt::entity createSessionState(int diskCount);
-    entt::entity createNextSessionConfig();
+    entt::entity createNextSessionConfig(int diskCount);
     entt::entity createBestRecord();
     entt::entity createBackground();
 

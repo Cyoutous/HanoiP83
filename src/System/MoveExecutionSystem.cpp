@@ -7,6 +7,7 @@
 #include "Component/SessionState.h"
 #include "Component/TweenPosition.h"
 #include "Component/TweenSequence.h"
+#include "Component/Interpolated.h"
 #include "Type/MoveAction.h"
 #include "Event/SessionStateChangedEvent.h"
 
@@ -65,9 +66,17 @@ void MoveExecutionSystem::onUpdate(entt::registry& reg, Resource& res) {
 
     // 清旧动画，挂三段 TweenSequence
     reg.remove<TweenPosition, TweenSequence>(action.disk);
+
+
+    // 瞬移行为和补间渲染冲突了，不得已使用此方案
     auto& diskPos = reg.get<Position>(action.disk);
+    diskPos.x = targetX;   // x 直接瞬移
+    // 同步插值快照，防止当帧横漂
+    if (auto* interp = reg.try_get<Interpolated>(action.disk)) {
+        interp->prevX = targetX;
+        interp->prevY = diskPos.y;  // 同步当前 Y，防止当帧下漂
+    }
     auto& seq = reg.emplace<TweenSequence>(action.disk);
-    seq.steps.push_back({diskPos.x, diskPos.y - 20.0f,      0.08f, EaseMode::EaseOut, 0.0f});  // 浮起
-    seq.steps.push_back({targetX,   diskPos.y - 20.0f,      0.0f,  EaseMode::Instant, 0.0f});  // 瞬移
+    //seq.steps.push_back({targetX,   diskPos.y - 20.0f,      0.0f,  EaseMode::Instant, 0.0f});  // 瞬移
     seq.steps.push_back({targetX,   targetY,                0.12f, EaseMode::EaseOut, 0.0f});  // 落下
 }

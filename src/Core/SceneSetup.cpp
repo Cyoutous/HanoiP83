@@ -12,7 +12,7 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
 
     // 数据实体
     f.createSessionState(3);
-    f.createNextSessionConfig();
+    f.createNextSessionConfig(3);
     f.createBestRecord();
     f.createSettings();
 
@@ -37,21 +37,20 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
         reg.emplace<HistoryPanelToggleTag>(history);
     auto settings  = f.createInstantButton(680, 680, 50, 30, 3);
         reg.emplace<SettingsPanelToggleTag>(settings);
-    auto closeBtn  = f.createInstantButton(1250, 20, 24, 24, 3);
-        reg.emplace<CloseButtonTag>(closeBtn);
 
     // 文字
     f.createText(40, 620, "Steps:", 20, LIGHTGRAY, 3);
     f.createTextWithTag<StepCounterTag>(110, 620, "0", 20, WHITE, 3);
-    f.createText(1140, 680, "Best:", 20, LIGHTGRAY, 3);
-    f.createTextWithTag<BestCounterTag>(1200, 680, "--", 20, WHITE, 3);
-    f.createTextWithTag<DiskCountTag>(75, 667, "5", 28, WHITE, 3);
+    f.createText(40, 590, "Best:", 20, LIGHTGRAY, 3);
+    f.createTextWithTag<BestCounterTag>(110, 590, "--", 20, WHITE, 3);
+
+    f.createTextWithTag<DiskCountTag>(75, 667, "3", 28, WHITE, 3);
 
 
     // 面板 + X 按钮
-    auto historyP  = f.createPanel(1600.0f, 360.0f, 600.0f, 500.0f, 4, PanelType::History);
-    auto historyX = f.createInstantButton(1280 + 260, 140, 20, 20, 5);
-    reg.emplace<PanelCloseTag>(historyX);
+    // auto historyP  = f.createPanel(1600.0f, 360.0f, 600.0f, 500.0f, 4, PanelType::History);
+    // auto historyX = f.createInstantButton(1280 + 260, 140, 20, 20, 5);
+    // reg.emplace<PanelCloseTag>(historyX);
     
     auto settingsP = f.createPanel(1600.0f, 360.0f, 600.0f, 500.0f, 4, PanelType::Settings);
     auto settingsX = f.createInstantButton(1280 + 260, 140, 20, 20, 5);

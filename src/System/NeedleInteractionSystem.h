@@ -16,6 +16,8 @@ class NeedleInteractionSystem : public ISystem {
     void floatTopDisk(entt::registry& reg, entt::entity needle);
     void landTopDisk(entt::registry& reg, entt::entity needle);
 
+    bool hasActiveAnimation(entt::registry& reg) const;
+
 public:
 
     std::string_view name() const override;

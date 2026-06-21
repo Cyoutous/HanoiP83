@@ -22,7 +22,7 @@
 #include "Component/PendingSetting.h"
 #include "Component/HistoryEntry.h"
 
-#include "Component/Tags.h"
+#include "Component/Tags.h" 
 
 EntityFactory::EntityFactory(entt::registry& reg) 
     : reg(reg) {}
@@ -34,7 +34,11 @@ entt::entity EntityFactory::createNeedle(float x, float y, int index) {
     reg.emplace<Position>(entity, x, y);
     reg.emplace<RectVisual>(entity, 20.0f, 280.0f, GRAY);   // 柱宽20, 高280
     reg.emplace<Layer>(entity, 1);
-    reg.emplace<Clickable>(entity, Vector2{-40, -140}, 80.0f, 280.0f);
+
+    float clickW = 280.0f;
+    float clickH = 280.0f;
+    reg.emplace<Clickable>(entity, Vector2{-clickW / 2, -clickH / 2}, clickW, clickH);
+
     reg.emplace<NeedleState>(entity);
     reg.emplace<NeedleStack>(entity);
     reg.emplace<NeedleIndex>(entity, index);
@@ -50,7 +54,7 @@ entt::entity EntityFactory::createDisk(float x, float y, int diskIndex, int tota
     reg.emplace<RectVisual>(entity, w, h, ColorFromHSV(diskIndex * 50.0f, 0.7f, 0.9f));
     reg.emplace<Layer>(entity, 2);
     reg.emplace<DiskData>(entity, diskIndex);
-    reg.emplace<Interpolated>(entity);          // 固定步长插值
+    reg.emplace<Interpolated>(entity, x, y);          // 固定步长插值
     return entity;
 }
 float EntityFactory::diskWidth(int diskIndex, int totalDisks) const {
@@ -67,9 +71,9 @@ entt::entity EntityFactory::createSessionState(int diskCount) {
     return entity;
 }
 
-entt::entity EntityFactory::createNextSessionConfig() {
+entt::entity EntityFactory::createNextSessionConfig(int diskCount) {
     auto entity = reg.create();
-    reg.emplace<NextSessionConfig>(entity, 5, false);
+    reg.emplace<NextSessionConfig>(entity, diskCount, false);
     return entity;
 }
 

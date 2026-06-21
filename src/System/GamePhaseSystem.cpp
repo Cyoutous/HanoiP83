@@ -18,7 +18,7 @@ void GamePhaseSystem::onUpdate(entt::registry& reg, Resource& res) {
     auto& session = reg.get<SessionState>(sessionEntity);
 
     // 已完成或自动演示 — 跳过
-    if (session.completed || session.isAutoDemo) return;
+    if (session.completed) return;
 
     // 找三根柱子的 NeedleIndex — 右柱 index=2
     entt::entity rightNeedle = entt::null;
@@ -36,6 +36,8 @@ void GamePhaseSystem::onUpdate(entt::registry& reg, Resource& res) {
 
     // 完成
     session.completed = true;
+    if (session.isAutoDemo) return;   // 自动演示不更新最佳记录
+
 
     // 比较最佳纪录
     auto bestView = reg.view<BestRecord>();

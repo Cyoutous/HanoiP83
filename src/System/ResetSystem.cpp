@@ -62,6 +62,15 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
         next.autoDemo = false;  // 消耗掉自动演示标记
     }
 
+    // 清空所有柱子栈
+    auto stackView = reg.view<NeedleStack>();
+    for (auto [entity, stack] : stackView.each()) {
+        stack.disks.clear();
+    }
+
+    // 清空残留的 actionQueue  ???
+    while (!res.actionQueue.empty()) res.actionQueue.pop();
+
     // ── 销毁旧盘子 ──
     auto disks = reg.view<const DiskData>();
     for (auto entity : disks) {
@@ -87,7 +96,6 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
     if (leftNeedle != entt::null) {
         auto& leftPos = reg.get<Position>(leftNeedle);
         auto& leftStack = reg.get<NeedleStack>(leftNeedle);
-        leftStack.disks.clear();
 
         for (int i = 0; i < newDiskCount; i++) {
             int diskIndex = i;
