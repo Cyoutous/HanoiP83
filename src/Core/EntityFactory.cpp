@@ -34,7 +34,7 @@ entt::entity EntityFactory::createNeedle(float x, float y, int index) {
     reg.emplace<Position>(entity, x, y);
     reg.emplace<RectVisual>(entity, 20.0f, 280.0f, GRAY);   // 柱宽20, 高280
     reg.emplace<Layer>(entity, 1);
-    reg.emplace<Clickable>(entity, Rectangle{x - 40, y - 140, 80, 280});
+    reg.emplace<Clickable>(entity, Vector2{-40, -140}, 80.0f, 280.0f);
     reg.emplace<NeedleState>(entity);
     reg.emplace<NeedleStack>(entity);
     reg.emplace<NeedleIndex>(entity, index);
@@ -97,7 +97,7 @@ entt::entity EntityFactory::createInstantButton(float x, float y, float w, float
     reg.emplace<Position>(entity, x, y);
     reg.emplace<RectVisual>(entity, w, h, DARKGRAY);
     reg.emplace<Layer>(entity, layer);
-    reg.emplace<Clickable>(entity, Rectangle{x - w / 2, y - h / 2, w, h});
+    reg.emplace<Clickable>(entity, Vector2{-w / 2, -h / 2}, w, h);
     reg.emplace<ButtonState>(entity);
     // 不挂 ToggleState，ButtonSystem 据此判断为即时按钮
     return entity;
@@ -109,14 +109,14 @@ entt::entity EntityFactory::createToggleButton(float x, float y, float w, float 
     reg.emplace<Position>(entity, x, y);
     reg.emplace<RectVisual>(entity, w, h, DARKGRAY);
     reg.emplace<Layer>(entity, layer);
-    reg.emplace<Clickable>(entity, Rectangle{x - w / 2, y - h / 2, w, h});
+    reg.emplace<Clickable>(entity, Vector2{-w / 2, -h / 2}, w, h);
     reg.emplace<ToggleState>(entity);
     return entity;
 }
 
 // 文字
 entt::entity EntityFactory::createText(float x, float y, const std::string& text,
-                                             int fontSize, Color color, int layer) {
+                                            int fontSize, Color color, int layer) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
     reg.emplace<TextLabel>(entity, text, fontSize, color);
@@ -126,24 +126,23 @@ entt::entity EntityFactory::createText(float x, float y, const std::string& text
 
 // 浮窗
 entt::entity EntityFactory::createPanel(float x, float y, float w, float h,
-                                         int layer, PanelType type) {
+                                        int layer, PanelType type) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
     reg.emplace<RectVisual>(entity, w, h, Color{40, 40, 40, 240});
     reg.emplace<Layer>(entity, layer);
-    reg.emplace<Clickable>(entity, Rectangle{x - w / 2, y - h / 2, w, h});
+    reg.emplace<Clickable>(entity, Vector2{-w / 2, -h / 2}, w, h);
     reg.emplace<Panel>(entity, type, false);
     reg.emplace<Interpolated>(entity);    // 滑入滑出需要插值
     return entity;
 }
 
 // 遮罩
-entt::entity EntityFactory::createOverlay() {
+entt::entity EntityFactory::createOverlay(float x, float y, float w, float h, int layer) {
     auto entity = reg.create();
-    reg.emplace<Position>(entity, 640.0f, 360.0f);
-    reg.emplace<RectVisual>(entity, 1280.0f, 720.0f, Fade(BLACK, 0.5f));
-    reg.emplace<Layer>(entity, 6);
-    reg.emplace<Clickable>(entity, Rectangle{0, 0, 1280, 720});  // 全屏阻挡点击
+    reg.emplace<Position>(entity, x, y);
+    reg.emplace<RectVisual>(entity, w, h, Fade(BLACK, 0.5f));
+    reg.emplace<Layer>(entity, layer);
     reg.emplace<Interpolated>(entity);
     return entity;
 }
@@ -163,4 +162,20 @@ entt::entity EntityFactory::createHistoryEntry(int diskCount, int steps,
     auto entity = reg.create();
     reg.emplace<HistoryEntry>(entity, HistoryEntry{diskCount, steps, completed, timestamp});
     return entity;
+}
+
+// 临时
+void EntityFactory::createDisksOnNeedle(entt::entity needle, int diskCount) {
+    auto& needlePos = reg.get<Position>(needle);
+    auto& stack = reg.get<NeedleStack>(needle);
+    stack.disks.clear();
+
+    for (int i = 0; i < diskCount; i++) {
+        // diskIndex: 0=最大(底), diskCount-1=最小(顶)
+        // 创建顺序从底到顶
+        int diskIndex = i;   // i=0 是底，diskIndex=0 是最大
+        float diskY = needlePos.y + 129.0f - i * 22.0f;
+        auto disk = createDisk(needlePos.x, diskY, diskIndex, diskCount);
+        stack.disks.push_back(disk);
+    }
 }

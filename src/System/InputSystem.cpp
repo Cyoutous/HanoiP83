@@ -26,9 +26,15 @@ void InputSystem::onUpdate(entt::registry& reg, Resource& res) {
     // 3. 找鼠标命中的最高层 Clickable
     entt::entity topEntity = entt::null;
     int topLayer = -1;
-    auto view = reg.view<const Clickable, const Layer>();
-    for (auto [entity, clickable, layer] : view.each()) {
-        if (CheckCollisionPointRec(mouse, clickable.bounds) && layer.value > topLayer) {
+    auto view = reg.view<const Position, const Clickable, const Layer>();
+    for (auto [entity, pos, clickable, layer] : view.each()) {
+        Rectangle worldBounds = {
+            pos.x + clickable.clickOffset.x,
+            pos.y + clickable.clickOffset.y,
+            clickable.width,
+            clickable.height
+        };
+        if (CheckCollisionPointRec(mouse, worldBounds) && layer.value > topLayer) {
             topEntity = entity;
             topLayer = layer.value;
         }

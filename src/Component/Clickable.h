@@ -3,5 +3,7 @@
 #include "raylib.h"
 
 struct Clickable {
-    Rectangle bounds = {0, 0, 0, 0};
+    Vector2 clickOffset = {0, 0};
+    float width = 0;
+    float height = 0;
 };

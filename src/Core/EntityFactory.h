@@ -4,6 +4,10 @@
 #include "raylib.h"
 
 #include "Component/Panel.h"
+#include "Component/Position.h"
+#include "Component/TextLabel.h"
+#include "Component/Layer.h"
+
 
 class EntityFactory {
 
@@ -25,7 +29,7 @@ public:
     entt::entity createInstantButton(float x, float y, float w, float h, int layer);
     entt::entity createToggleButton(float x, float y, float w, float h, int layer);
     entt::entity createPanel(float x, float y, float w, float h, int layer, PanelType type);
-    entt::entity createOverlay();
+    entt::entity createOverlay(float x, float y, float w, float h, int layer);
     
     entt::entity createText(float x, float y, const std::string& text, int fontSize, Color color, int layer);
     template<typename... Tags> 
@@ -34,6 +38,8 @@ public:
     entt::entity createSettings();
     entt::entity createHistoryEntry(int diskCount, int steps, bool completed, const std::string& timestamp);
 
+    void createDisksOnNeedle(entt::entity needle, int diskCount);
+    
 };
 
 
