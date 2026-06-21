@@ -60,6 +60,20 @@ void App::run() {
 
         //检查窗口更新
         if (IsWindowResized()) {
+            int w = GetScreenWidth();
+            int h = GetScreenHeight();
+            float targetRatio = 1280.0f / 720.0f;
+            float actualRatio = (float)w / h;
+
+            if (actualRatio > targetRatio) {
+                // 太宽 → 收缩宽度
+                w = (int)(h * targetRatio);
+            } else {
+                // 太高 → 收缩高度
+                h = (int)(w / targetRatio);
+            }
+            SetWindowSize(w, h);
+
             res.windowState.update();
         }
         

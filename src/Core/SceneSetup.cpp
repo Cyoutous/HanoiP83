@@ -20,22 +20,22 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     f.createBackground();
 
     // 三根柱子
-    f.createNeedle(260, 360, 0);
-    f.createNeedle(640, 360, 1);
-    f.createNeedle(1020, 360, 2);
+    f.createNeedle(350, 340, 0);
+    f.createNeedle(640, 340, 1);
+    f.createNeedle(930, 340, 2);
 
     // 底部按钮栏
-    auto leftArrow  = f.createInstantButton(40, 680, 30, 30, 3);
+    auto leftArrow  = f.createInstantButton(60, 660, 50, 50, 3);
         reg.emplace<DiskCountArrowDownTag>(leftArrow);
-    auto rightArrow = f.createInstantButton(120, 680, 30, 30, 3);
+    auto rightArrow = f.createInstantButton(210, 660, 50, 50, 3);
         reg.emplace<DiskCountArrowUpTag>(rightArrow);
-    auto autoDemo  = f.createToggleButton(200, 680, 60, 30, 3);
+    auto autoDemo  = f.createToggleButton(290, 660, 50, 50, 3);
         reg.emplace<AutoDemoButtonTag>(autoDemo);
-    auto reset     = f.createInstantButton(300, 680, 60, 30, 3);
+    auto reset     = f.createInstantButton(370, 660, 50, 50, 3);
         reg.emplace<ResetButtonTag>(reset);
-    auto history   = f.createInstantButton(600, 680, 50, 30, 3);
-        reg.emplace<HistoryPanelToggleTag>(history);
-    auto settings  = f.createInstantButton(680, 680, 50, 30, 3);
+    // auto history   = f.createInstantButton(600, 680, 50, 30, 3);
+    //     reg.emplace<HistoryPanelToggleTag>(history);
+    auto settings  = f.createInstantButton(1220, 660, 50, 50, 3);
         reg.emplace<SettingsPanelToggleTag>(settings);
 
     // 文字
@@ -44,7 +44,7 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     f.createText(40, 590, "Best:", 20, LIGHTGRAY, 3);
     f.createTextWithTag<BestCounterTag>(110, 590, "--", 20, WHITE, 3);
 
-    f.createTextWithTag<DiskCountTag>(75, 667, "3", 28, WHITE, 3);
+    f.createTextWithTag<DiskCountTag>(125, 642, "3", 36, BLUE, 3);
 
 
     // 面板 + X 按钮
