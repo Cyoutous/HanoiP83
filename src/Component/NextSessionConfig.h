@@ -1,6 +1,6 @@
 #pragma once
 
 struct NextSessionConfig {
-    int diskCount = 5;
+    int diskCount = 3;
     bool autoDemo = false;
 };

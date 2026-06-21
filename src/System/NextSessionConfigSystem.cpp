@@ -14,6 +14,12 @@ void NextSessionConfigSystem::setDiskCount(entt::registry& reg, int count) {
     if (view.begin() == view.end()) return;
     auto& next = reg.get<NextSessionConfig>(*view.begin());
     next.diskCount = std::clamp(count, 3, 10);
+
+    // 刷新标签
+    auto diskView = reg.view<TextLabel, DiskCountTag>();
+    for (auto [entity, label] : diskView.each()) {
+        label.text = std::to_string(next.diskCount);
+    }
 }
 
 void NextSessionConfigSystem::onButtonClicked(ButtonClickedEvent& event) {

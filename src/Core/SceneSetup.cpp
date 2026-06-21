@@ -25,27 +25,27 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     f.createNeedle(1020, 360, 2);
 
     // 底部按钮栏
-    auto leftArrow  = f.createInstantButton(200, 680, 30, 30, 3);
-    reg.emplace<DiskCountArrowDownTag>(leftArrow);
-    auto reset     = f.createInstantButton(400, 680, 60, 30, 3);
-    reg.emplace<ResetButtonTag>(reset);
-    auto autoDemo  = f.createToggleButton(500, 680, 60, 30, 3);
-    reg.emplace<AutoDemoButtonTag>(autoDemo);
+    auto leftArrow  = f.createInstantButton(40, 680, 30, 30, 3);
+        reg.emplace<DiskCountArrowDownTag>(leftArrow);
+    auto rightArrow = f.createInstantButton(120, 680, 30, 30, 3);
+        reg.emplace<DiskCountArrowUpTag>(rightArrow);
+    auto autoDemo  = f.createToggleButton(200, 680, 60, 30, 3);
+        reg.emplace<AutoDemoButtonTag>(autoDemo);
+    auto reset     = f.createInstantButton(300, 680, 60, 30, 3);
+        reg.emplace<ResetButtonTag>(reset);
     auto history   = f.createInstantButton(600, 680, 50, 30, 3);
-    reg.emplace<HistoryPanelToggleTag>(history);
+        reg.emplace<HistoryPanelToggleTag>(history);
     auto settings  = f.createInstantButton(680, 680, 50, 30, 3);
-    reg.emplace<SettingsPanelToggleTag>(settings);
-    auto rightArrow = f.createInstantButton(760, 680, 30, 30, 3);
-    reg.emplace<DiskCountArrowUpTag>(rightArrow);
+        reg.emplace<SettingsPanelToggleTag>(settings);
     auto closeBtn  = f.createInstantButton(1250, 20, 24, 24, 3);
-    reg.emplace<CloseButtonTag>(closeBtn);
+        reg.emplace<CloseButtonTag>(closeBtn);
 
     // 文字
-    f.createText(40, 680, "Steps:", 20, LIGHTGRAY, 3);
-    f.createTextWithTag<StepCounterTag>(100, 680, "0", 20, WHITE, 3);
+    f.createText(40, 620, "Steps:", 20, LIGHTGRAY, 3);
+    f.createTextWithTag<StepCounterTag>(110, 620, "0", 20, WHITE, 3);
     f.createText(1140, 680, "Best:", 20, LIGHTGRAY, 3);
     f.createTextWithTag<BestCounterTag>(1200, 680, "--", 20, WHITE, 3);
-    f.createTextWithTag<DiskCountTag>(640, 695, "5", 28, WHITE, 3);
+    f.createTextWithTag<DiskCountTag>(75, 667, "5", 28, WHITE, 3);
 
 
     // 面板 + X 按钮
