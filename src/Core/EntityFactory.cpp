@@ -165,15 +165,19 @@ entt::entity EntityFactory::createHistoryEntry(int diskCount, int steps,
 }
 
 // 临时
-void EntityFactory::createDisksOnNeedle(entt::entity needle, int diskCount) {
+void EntityFactory::createDisksOnNeedle(entt::entity needle) {
     auto& needlePos = reg.get<Position>(needle);
     auto& stack = reg.get<NeedleStack>(needle);
     stack.disks.clear();
 
+     // 读 SessionState 拿盘数
+    auto sessionView = reg.view<const SessionState>();
+    if (sessionView.begin() == sessionView.end()) return;
+    int diskCount = reg.get<const SessionState>(*sessionView.begin()).diskCount;
+
+
     for (int i = 0; i < diskCount; i++) {
-        // diskIndex: 0=最大(底), diskCount-1=最小(顶)
-        // 创建顺序从底到顶
-        int diskIndex = i;   // i=0 是底，diskIndex=0 是最大
+        int diskIndex = i;
         float diskY = needlePos.y + 129.0f - i * 22.0f;
         auto disk = createDisk(needlePos.x, diskY, diskIndex, diskCount);
         stack.disks.push_back(disk);

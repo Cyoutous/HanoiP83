@@ -28,6 +28,9 @@ void InputSystem::onUpdate(entt::registry& reg, Resource& res) {
     int topLayer = -1;
     auto view = reg.view<const Position, const Clickable, const Layer>();
     for (auto [entity, pos, clickable, layer] : view.each()) {
+        if (auto* panel = reg.try_get<const Panel>(entity)) {
+            if (!panel->isOpen) continue;
+        }
         Rectangle worldBounds = {
             pos.x + clickable.clickOffset.x,
             pos.y + clickable.clickOffset.y,

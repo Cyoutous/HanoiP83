@@ -38,7 +38,7 @@ public:
     entt::entity createSettings();
     entt::entity createHistoryEntry(int diskCount, int steps, bool completed, const std::string& timestamp);
 
-    void createDisksOnNeedle(entt::entity needle, int diskCount);
+    void createDisksOnNeedle(entt::entity needle);
     
 };
 
