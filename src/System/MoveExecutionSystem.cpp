@@ -71,6 +71,7 @@ void MoveExecutionSystem::onUpdate(entt::registry& reg, Resource& res) {
     // 瞬移行为和补间渲染冲突了，不得已使用此方案
     auto& diskPos = reg.get<Position>(action.disk);
     diskPos.x = targetX;   // x 直接瞬移
+    diskPos.y = targetY - 20.0f;
     // 同步插值快照，防止当帧横漂
     if (auto* interp = reg.try_get<Interpolated>(action.disk)) {
         interp->prevX = targetX;
