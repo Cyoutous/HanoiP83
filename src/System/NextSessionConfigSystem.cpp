@@ -13,7 +13,7 @@ void NextSessionConfigSystem::setDiskCount(entt::registry& reg, int count) {
     auto view = reg.view<NextSessionConfig>();
     if (view.begin() == view.end()) return;
     auto& next = reg.get<NextSessionConfig>(*view.begin());
-    next.diskCount = std::clamp(count, 3, 10);
+    next.diskCount = std::clamp(count, 3, 9);
 
     // 刷新标签
     auto diskView = reg.view<TextLabel, DiskCountTag>();

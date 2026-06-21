@@ -25,10 +25,10 @@ bool MoveExecutionSystem::hasActiveTween(entt::registry& reg) const {
     return false;
 }
 
-float MoveExecutionSystem::calcDiskY(entt::registry& reg, entt::entity needle, int stackIndex) const {
+float MoveExecutionSystem::calcDiskY(entt::registry& reg, Resource& res, entt::entity needle, int stackIndex) const {
     auto& needlePos = reg.get<Position>(needle);
-    float baseY = needlePos.y + 129.0f;
-    return baseY - (stackIndex - 1) * 22.0f;
+    float baseY = needlePos.y + res.diskBaseOffset;
+    return baseY - (stackIndex - 1) * res.diskHeight;
 }
 
 // ---------- 主体 ----------
@@ -62,7 +62,7 @@ void MoveExecutionSystem::onUpdate(entt::registry& reg, Resource& res) {
     // 堆叠索引 = toStack 当前大小
     int stackIndex = (int)toStack.disks.size();
     float targetX = reg.get<Position>(action.toPillar).x;
-    float targetY = calcDiskY(reg, action.toPillar, stackIndex);
+    float targetY = calcDiskY(reg, res, action.toPillar, stackIndex);
 
     // 清旧动画，挂三段 TweenSequence
     reg.remove<TweenPosition, TweenSequence>(action.disk);

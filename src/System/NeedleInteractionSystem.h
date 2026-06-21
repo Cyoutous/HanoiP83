@@ -10,11 +10,11 @@ class NeedleInteractionSystem : public ISystem {
 
     entt::entity _selectedNeedle = entt::null;
 
-    bool canMove(entt::registry& reg, entt::entity from, entt::entity to) const;
-    void selectNeedle(entt::registry& reg, entt::entity needle);
-    void deselectNeedle(entt::registry& reg);
-    void floatTopDisk(entt::registry& reg, entt::entity needle);
-    void landTopDisk(entt::registry& reg, entt::entity needle);
+    bool canMove(entt::registry& reg, Resource& res, entt::entity from, entt::entity to) const;
+    void selectNeedle(entt::registry& reg, Resource& res, entt::entity needle);
+    void deselectNeedle(entt::registry& reg, Resource& res);
+    void floatTopDisk(entt::registry& reg, Resource& res, entt::entity needle);
+    void landTopDisk(entt::registry& reg, Resource& res, entt::entity needle);
 
     bool hasActiveAnimation(entt::registry& reg) const;
 

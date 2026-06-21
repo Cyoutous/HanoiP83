@@ -99,7 +99,7 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
 
         for (int i = 0; i < newDiskCount; i++) {
             int diskIndex = i;
-            float diskY = leftPos.y + 129.0f - i * 22.0f;
+            float diskY = leftPos.y + res.diskBaseOffset - i * res.diskHeight;
             auto disk = factory.createDisk(leftPos.x, diskY, diskIndex, newDiskCount);
             leftStack.disks.push_back(disk);
         }

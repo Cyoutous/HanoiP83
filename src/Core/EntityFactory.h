@@ -3,6 +3,7 @@
 #include <entt/entt.hpp>
 #include "raylib.h"
 
+class Resource;
 #include "Component/Panel.h"
 #include "Component/Position.h"
 #include "Component/TextLabel.h"
@@ -12,10 +13,11 @@
 class EntityFactory {
 
     entt::registry& reg;
+    Resource& res;
 
 public:
 
-    EntityFactory(entt::registry& reg);
+    EntityFactory(entt::registry& reg, Resource& res);
     ~EntityFactory() = default;
 
     entt::entity createNeedle(float x, float y, int index);

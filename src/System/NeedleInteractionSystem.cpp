@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "Core/Resource.h"
+#include "Core/Resource.h"
 #include "Component/Position.h"
 #include "Component/NeedleState.h"
 #include "Component/NeedleStack.h"
@@ -17,7 +18,7 @@ Phase NeedleInteractionSystem::phase() const { return Phase::Logic; }
 
 // ---------- 辅助 ----------
 
-bool NeedleInteractionSystem::canMove(entt::registry& reg, entt::entity from, entt::entity to) const {
+bool NeedleInteractionSystem::canMove(entt::registry& reg, Resource& res, entt::entity from, entt::entity to) const {
     if (from == to) return false;
 
     auto& fromStack = reg.get<NeedleStack>(from);
@@ -31,37 +32,37 @@ bool NeedleInteractionSystem::canMove(entt::registry& reg, entt::entity from, en
     return movedDisk.size > topDisk.size;
 }
 
-void NeedleInteractionSystem::floatTopDisk(entt::registry& reg, entt::entity needle) {
+void NeedleInteractionSystem::floatTopDisk(entt::registry& reg, Resource& res, entt::entity needle) {
     auto& stack = reg.get<NeedleStack>(needle);
     if (stack.disks.empty()) return;
     auto disk = stack.disks.back();
     reg.remove<TweenPosition, TweenSequence>(disk);
     auto& pos = reg.get<Position>(disk);
-    reg.emplace<TweenPosition>(disk, pos.x, pos.y, pos.x, pos.y - 20.0f, 0.08f, 0.0f, EaseMode::EaseOut);
+    reg.emplace<TweenPosition>(disk, pos.x, pos.y, pos.x, pos.y - res.diskFloatOffset, 0.08f, 0.0f, EaseMode::EaseOut);
 }
 
-void NeedleInteractionSystem::landTopDisk(entt::registry& reg, entt::entity needle) {
+void NeedleInteractionSystem::landTopDisk(entt::registry& reg, Resource& res, entt::entity needle) {
     auto& stack = reg.get<NeedleStack>(needle);
     if (stack.disks.empty()) return;
     auto disk = stack.disks.back();
     reg.remove<TweenPosition, TweenSequence>(disk);
     auto& pos = reg.get<Position>(disk);
-    reg.emplace<TweenPosition>(disk, pos.x, pos.y, pos.x, pos.y + 20.0f, 0.08f, 0.0f, EaseMode::EaseOut);
+    reg.emplace<TweenPosition>(disk, pos.x, pos.y, pos.x, pos.y + res.diskFloatOffset, 0.08f, 0.0f, EaseMode::EaseOut);
 }
 
-void NeedleInteractionSystem::selectNeedle(entt::registry& reg, entt::entity needle) {
+void NeedleInteractionSystem::selectNeedle(entt::registry& reg, Resource& res, entt::entity needle) {
     _selectedNeedle = needle;
     reg.get<NeedleState>(needle).visual = NeedleVisual::Selected;
-    floatTopDisk(reg, needle);
+    floatTopDisk(reg, res, needle);
 }
 
-void NeedleInteractionSystem::deselectNeedle(entt::registry& reg) {
+void NeedleInteractionSystem::deselectNeedle(entt::registry& reg, Resource& res) {
     if (_selectedNeedle == entt::null) return;
     auto needle = _selectedNeedle;
     auto& state = reg.get<NeedleState>(needle);
     state.visual = NeedleVisual::Idle;
     state.autoDeselectTimer = 0.0f;
-    landTopDisk(reg, needle);
+    landTopDisk(reg, res, needle);
     _selectedNeedle = entt::null;
 }
 
@@ -85,7 +86,7 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
     if (sessionView.begin() != sessionView.end()) {
         auto& session = reg.get<const SessionState>(*sessionView.begin());
         if (session.isAutoDemo || session.completed) {
-            if (_selectedNeedle != entt::null) deselectNeedle(reg);
+            if (_selectedNeedle != entt::null) deselectNeedle(reg, res);
             return;
         }
     }
@@ -100,7 +101,7 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
             if (state.autoDeselectTimer <= 0.0f) {
                 state.visual = NeedleVisual::Idle;
                 if (entity == _selectedNeedle) {
-                    landTopDisk(reg, entity);
+                    landTopDisk(reg, res, entity);
                     _selectedNeedle = entt::null;
                 }
             }
@@ -119,7 +120,7 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
                 state.visual = NeedleVisual::Selected;
                 state.autoDeselectTimer = 0.3f;
             } else {
-                selectNeedle(reg, entity);
+                selectNeedle(reg, res, entity);
             }
             continue;
         }
@@ -127,12 +128,12 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
         // ── 已有选中 ──
         if (entity == _selectedNeedle) {
             // 再次点同一根 → 取消
-            deselectNeedle(reg);
+            deselectNeedle(reg, res);
             continue;
         }
 
         // 点另一根
-        if (canMove(reg, _selectedNeedle, entity)) {
+        if (canMove(reg, res, _selectedNeedle, entity)) {
             // 合法 → 目标柱短暂高光
             auto& targetState = reg.get<NeedleState>(entity);
             targetState.visual = NeedleVisual::Selected;

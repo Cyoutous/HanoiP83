@@ -9,7 +9,7 @@ struct Resource;
 class MoveExecutionSystem : public ISystem {
     
     bool hasActiveTween(entt::registry& reg) const;
-    float calcDiskY(entt::registry& reg, entt::entity needle, int stackIndex) const;
+    float calcDiskY(entt::registry& reg, Resource& res, entt::entity needle, int stackIndex) const;
 
 public:
 

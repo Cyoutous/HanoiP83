@@ -39,10 +39,10 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
         reg.emplace<SettingsPanelToggleTag>(settings);
 
     // 文字
-    f.createText(40, 620, "Steps:", 20, LIGHTGRAY, 3);
-    f.createTextWithTag<StepCounterTag>(110, 620, "0", 20, WHITE, 3);
-    f.createText(40, 590, "Best:", 20, LIGHTGRAY, 3);
-    f.createTextWithTag<BestCounterTag>(110, 590, "--", 20, WHITE, 3);
+    f.createText(38, 545, "Steps:", 30, LIGHTGRAY, 3);
+    f.createTextWithTag<StepCounterTag>(150, 545, "0", 30, WHITE, 3);
+    f.createText(38, 590, "Best:", 30, LIGHTGRAY, 3);
+    f.createTextWithTag<BestCounterTag>(140, 590, "--", 30, WHITE, 3);
 
     f.createTextWithTag<DiskCountTag>(125, 642, "3", 36, BLUE, 3);
 

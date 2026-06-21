@@ -1,5 +1,7 @@
 #include "EntityFactory.h"
 
+#include "Core/Resource.h"
+
 #include "Component/Position.h"
 #include "Component/RectVisual.h"
 #include "Component/Layer.h"
@@ -24,19 +26,19 @@
 
 #include "Component/Tags.h" 
 
-EntityFactory::EntityFactory(entt::registry& reg) 
-    : reg(reg) {}
+EntityFactory::EntityFactory(entt::registry& reg, Resource& res) 
+    : reg(reg), res(res) {}
 
 
 // 柱子
 entt::entity EntityFactory::createNeedle(float x, float y, int index) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, 20.0f, 280.0f, GRAY);   // 柱宽20, 高280
+    reg.emplace<RectVisual>(entity, 20.0f, res.needleHeight, GRAY);   // 柱宽20, 高280
     reg.emplace<Layer>(entity, 1);
 
-    float clickW = 280.0f;
-    float clickH = 280.0f;
+    float clickW = res.needleHeight;
+    float clickH = res.needleHeight;
     reg.emplace<Clickable>(entity, Vector2{-clickW / 2, -clickH / 2}, clickW, clickH);
 
     reg.emplace<NeedleState>(entity);
@@ -49,7 +51,7 @@ entt::entity EntityFactory::createNeedle(float x, float y, int index) {
 entt::entity EntityFactory::createDisk(float x, float y, int diskIndex, int totalDisks) {
     auto entity = reg.create();
     float w = diskWidth(diskIndex, totalDisks);
-    float h = 22.0f;
+    float h = res.diskHeight;
     reg.emplace<Position>(entity, x, y);
     reg.emplace<RectVisual>(entity, w, h, ColorFromHSV(diskIndex * 50.0f, 0.7f, 0.9f));
     reg.emplace<Layer>(entity, 2);
@@ -58,10 +60,8 @@ entt::entity EntityFactory::createDisk(float x, float y, int diskIndex, int tota
     return entity;
 }
 float EntityFactory::diskWidth(int diskIndex, int totalDisks) const {
-    float minWidth = 40.0f;
-    float maxWidth = 160.0f;
     float t = totalDisks > 1 ? (float)diskIndex / (totalDisks - 1) : 0.0f; // 0 = 最小, 1 = 最大
-    return minWidth + (maxWidth - minWidth) * (1.0f - t);
+    return res.minDiskWidth + (res.maxDiskWidth - res.minDiskWidth) * (1.0f - t);
 }
 
 // 关卡状态
@@ -182,7 +182,7 @@ void EntityFactory::createDisksOnNeedle(entt::entity needle) {
 
     for (int i = 0; i < diskCount; i++) {
         int diskIndex = i;
-        float diskY = needlePos.y + 129.0f - i * 22.0f;
+        float diskY = needlePos.y + res.diskBaseOffset - i * res.diskHeight;
         auto disk = createDisk(needlePos.x, diskY, diskIndex, diskCount);
         stack.disks.push_back(disk);
     }
