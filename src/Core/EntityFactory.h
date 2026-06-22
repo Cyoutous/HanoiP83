@@ -32,6 +32,7 @@ public:
     entt::entity createToggleButton(float x, float y, float w, float h, int layer);
     entt::entity createPanel(float x, float y, float w, float h, int layer, PanelType type);
     entt::entity createOverlay(float x, float y, float w, float h, int layer);
+    entt::entity createIndicator(float x, float y, int layer);
     
     entt::entity createText(float x, float y, const std::string& text, int fontSize, Color color, int layer);
     template<typename... Tags> 

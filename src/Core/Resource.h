@@ -25,7 +25,7 @@ struct Resource
     float diskHeight      = 30.0f;     // 盘子厚度
     float minDiskWidth = 60.0f;
     float maxDiskWidth = 240.0f;
-    float diskFloatOffset = 30.0f;     
+    float diskFloatOffset = 120.0f;     
     float needleHeight    = 280.0f;
     float diskBaseOffset  = needleHeight / 2.0f - diskHeight/ 2.0f;
     

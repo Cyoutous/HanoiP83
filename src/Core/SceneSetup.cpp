@@ -39,22 +39,24 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
         reg.emplace<SettingsPanelToggleTag>(settings);
 
     // 文字
-    f.createText(38, 545, "Steps:", 30, LIGHTGRAY, 3);
-    f.createTextWithTag<StepCounterTag>(150, 545, "0", 30, WHITE, 3);
-    f.createText(38, 590, "Best:", 30, LIGHTGRAY, 3);
-    f.createTextWithTag<BestCounterTag>(140, 590, "--", 30, WHITE, 3);
+    f.createText(38, 530, "Steps:", 30, LIGHTGRAY, 3);
+    f.createTextWithTag<StepCounterTag>(150, 530, "0", 30, WHITE, 3);
+    f.createText(38, 570, "Best:", 30, LIGHTGRAY, 3);
+    f.createTextWithTag<BestCounterTag>(140, 570, "--", 30, WHITE, 3);
 
     f.createTextWithTag<DiskCountTag>(125, 642, "3", 36, BLUE, 3);
-
-
-    // 面板 + X 按钮
-    // auto historyP  = f.createPanel(1600.0f, 360.0f, 600.0f, 500.0f, 4, PanelType::History);
-    // auto historyX = f.createInstantButton(1280 + 260, 140, 20, 20, 5);
-    // reg.emplace<PanelCloseTag>(historyX);
     
+    // 设置面板
     auto settingsP = f.createPanel(1600.0f, 360.0f, 600.0f, 500.0f, 4, PanelType::Settings);
     auto settingsX = f.createInstantButton(1280 + 260, 140, 20, 20, 5);
     reg.emplace<PanelCloseTag>(settingsX);
+
+    // 指示灯
+    auto diskInd = f.createIndicator(135, 620, 3);
+    reg.emplace<DiskCountIndicatorTag>(diskInd);
+
+    auto autoInd = f.createIndicator(290, 620, 3);
+    reg.emplace<AutoDemoIndicatorTag>(autoInd);
 
 
     // 遮罩

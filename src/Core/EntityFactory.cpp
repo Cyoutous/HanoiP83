@@ -37,7 +37,7 @@ entt::entity EntityFactory::createNeedle(float x, float y, int index) {
     reg.emplace<RectVisual>(entity, 20.0f, res.needleHeight, GRAY);   // 柱宽20, 高280
     reg.emplace<Layer>(entity, 1);
 
-    float clickW = res.needleHeight;
+    float clickW = 280.0f;
     float clickH = res.needleHeight;
     reg.emplace<Clickable>(entity, Vector2{-clickW / 2, -clickH / 2}, clickW, clickH);
 
@@ -148,6 +148,15 @@ entt::entity EntityFactory::createOverlay(float x, float y, float w, float h, in
     reg.emplace<RectVisual>(entity, w, h, Fade(BLACK, 0.5f));
     reg.emplace<Layer>(entity, layer);
     reg.emplace<Interpolated>(entity);
+    return entity;
+}
+
+//指示灯
+entt::entity EntityFactory::createIndicator(float x, float y, int layer) {
+    auto entity = reg.create();
+    reg.emplace<Position>(entity, x, y);
+    reg.emplace<RectVisual>(entity, 10.0f, 10.0f, DARKGRAY);
+    reg.emplace<Layer>(entity, layer);
     return entity;
 }
 
