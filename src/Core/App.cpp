@@ -36,6 +36,7 @@ App::App()
     scheduler.add(std::make_unique<NeedleInteractionSystem>());
     scheduler.add(std::make_unique<PanelSystem>());
     scheduler.add(std::make_unique<IndicatorSystem>());
+    scheduler.add(std::make_unique<SettingsSystem>());
     
     scheduler.add(std::make_unique<TweenSystem>());
     scheduler.add(std::make_unique<MoveSnapshotSystem>());
@@ -48,7 +49,6 @@ App::App()
     scheduler.add(std::make_unique<RectRenderSystem>());
     scheduler.add(std::make_unique<UIRenderSystem>());
     
-    scheduler.add(std::make_unique<SettingsSystem>());
     //scheduler.add(std::make_unique<>());
     
     SceneSetup::build(reg, res);
