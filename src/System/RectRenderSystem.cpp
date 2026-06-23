@@ -34,9 +34,9 @@ void RectRenderSystem::onUpdate(entt::registry& reg, Resource& res) {
             drawY = interp->prevY * (1.0f - res.alpha) + pos.y * res.alpha;
         }
 
-        if (auto* panel = reg.try_get<const Panel>(entity)) {
-            if (!panel->isOpen) continue;
-        }
+        // if (auto* panel = reg.try_get<const Panel>(entity)) {
+        //     if (!panel->isOpen) continue;
+        // }
 
 
         int layer = 0;

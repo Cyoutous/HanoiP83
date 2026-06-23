@@ -6,6 +6,7 @@
 #include "Component/InputResponse.h"
 #include "Event/ButtonClickedEvent.h"
 #include "Event/ToggleChangedEvent.h"
+#include "Event/SettingsButtonEvent.h"
 
 std::string_view ButtonSystem::name() const { 
     return "buttonSystem"; 
@@ -22,6 +23,7 @@ void ButtonSystem::onUpdate(entt::registry& reg, Resource& res) {
         if (input.clicked) {
             btn.visual = ButtonVisual::Idle;
             res.events.trigger(ButtonClickedEvent{entity});
+            res.events.trigger(SettingsButtonEvent{entity});
         } else if (input.pressed) {
             btn.visual = ButtonVisual::Pressed;
         } else {

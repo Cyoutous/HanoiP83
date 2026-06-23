@@ -133,7 +133,7 @@ entt::entity EntityFactory::createPanel(float x, float y, float w, float h,
                                         int layer, PanelType type) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, w, h, Color{40, 40, 40, 240});
+    reg.emplace<RectVisual>(entity, w, h, Color{40, 40, 40, 255});
     reg.emplace<Layer>(entity, layer);
     reg.emplace<Clickable>(entity, Vector2{-w / 2, -h / 2}, w, h);
     reg.emplace<Panel>(entity, type, false);

@@ -11,6 +11,7 @@
 #include "System/NeedleInteractionSystem.h"
 #include "System/PanelSystem.h"
 #include "System/IndicatorSystem.h"
+#include "System/SettingsSystem.h"
 
 #include "System/TweenSystem.h"
 #include "System/MoveSnapshotSystem.h"
@@ -43,10 +44,11 @@ App::App()
     scheduler.add(std::make_unique<AutoDemoSystem>());
     scheduler.add(std::make_unique<ResetSystem>());
     scheduler.add(std::make_unique<NextSessionConfigSystem>());
-
+    
     scheduler.add(std::make_unique<RectRenderSystem>());
     scheduler.add(std::make_unique<UIRenderSystem>());
-
+    
+    scheduler.add(std::make_unique<SettingsSystem>());
     //scheduler.add(std::make_unique<>());
     
     SceneSetup::build(reg, res);

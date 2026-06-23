@@ -17,3 +17,13 @@ struct CloseButtonTag    {};
 
 struct DiskCountIndicatorTag {};
 struct AutoDemoIndicatorTag {};
+
+struct VolumeUpTag {};
+struct VolumeDownTag {};
+struct ResolutionNextTag {};
+struct ResolutionPrevTag {};
+struct DeleteBestRecordTag {};
+struct VolumeDisplayTag {};
+struct ResolutionDisplayTag {};
+
+struct SettingsPanelChildTag {};
