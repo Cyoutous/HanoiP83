@@ -4,6 +4,7 @@
 
 #include "Component/Position.h"
 #include "Component/RectVisual.h"
+#include "Component/SpriteStates.h"
 #include "Component/Layer.h"
 #include "Component/Clickable.h"
 #include "Component/NeedleState.h"
@@ -34,8 +35,14 @@ EntityFactory::EntityFactory(entt::registry& reg, Resource& res)
 entt::entity EntityFactory::createNeedle(float x, float y, int index) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, 16.0f, res.needleHeight, GRAY);   // 柱宽20, 高280
     reg.emplace<Layer>(entity, 1);
+    //reg.emplace<RectVisual>(entity, 16.0f, res.needleHeight, GRAY);   // 柱宽16, 高280
+    auto& ss = reg.emplace<SpriteStates>(entity);
+    ss.width = 280;
+    ss.height = 280;
+    ss.textures[0]                              = LoadTexture("assets/Texture/shift_weak_power.png");
+    ss.textures[(int)NeedleVisual::Selected]    = LoadTexture("assets/Texture/shift_weak_power.png");
+    ss.textures[(int)NeedleVisual::InvalidTarget] = LoadTexture("assets/Texture/shift_weak_power.png");
 
     float clickW = 280.0f;
     float clickH = res.needleHeight;

@@ -2,9 +2,9 @@
 
 #include "raylib.h"
 
-struct StaticSprite
-{
+struct StaticSprite {
     Texture2D texture;
-    float width = 0;
-    float height = 0;
+    float width = 0.0f;
+    float height = 0.0f;
+    Color tint = WHITE;
 };

@@ -22,6 +22,8 @@
 #include "System/NextSessionConfigSystem.h"
 
 #include "System/RectRenderSystem.h"
+#include "System/SpriteRenderSystem.h"
+#include "System/RenderSystem.h"
 #include "System/UIRenderSystem.h"
 
 #include "Component/Position.h"
@@ -49,7 +51,9 @@ App::App()
     scheduler.add(std::make_unique<NextSessionConfigSystem>());
     
     scheduler.add(std::make_unique<RectRenderSystem>());
-    scheduler.add(std::make_unique<UIRenderSystem>());
+    // scheduler.add(std::make_unique<SpriteRenderSystem>());
+    //scheduler.add(std::make_unique<UIRenderSystem>());
+    scheduler.add(std::make_unique<RenderSystem>());
     
     //scheduler.add(std::make_unique<>());
     

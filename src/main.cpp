@@ -7,7 +7,7 @@
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE); //允许缩放
-    InitWindow(1280, 720, "Game");   // raylib就绪
+    InitWindow(1280, 720, "HanoiP83");   // raylib就绪
     SetTargetFPS(0);                  // 不锁帧，让插值生效
 
     {
