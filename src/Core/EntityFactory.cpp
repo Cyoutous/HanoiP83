@@ -34,7 +34,7 @@ EntityFactory::EntityFactory(entt::registry& reg, Resource& res)
 entt::entity EntityFactory::createNeedle(float x, float y, int index) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, 20.0f, res.needleHeight, GRAY);   // 柱宽20, 高280
+    reg.emplace<RectVisual>(entity, 16.0f, res.needleHeight, GRAY);   // 柱宽20, 高280
     reg.emplace<Layer>(entity, 1);
 
     float clickW = 280.0f;
