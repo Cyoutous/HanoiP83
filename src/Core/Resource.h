@@ -7,6 +7,7 @@
 #include "WindowState.h"
 #include "EntityFactory.h"
 #include "Type/moveAction.h"
+#include "Type/SetupCache.h"
 
 struct Resource
 {
@@ -14,6 +15,7 @@ struct Resource
     entt::dispatcher events;
     WindowState windowState;
     EntityFactory  factory;
+    SetupCache setupCache;
 
     std::queue<MoveAction> actionQueue;
 

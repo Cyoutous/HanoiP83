@@ -46,7 +46,7 @@ void SessionStateUpdateSystem::onBestRecordChanged(BestRecordChangedEvent&) {
     const auto& session = reg.get<const SessionState>(sEntity);
 
     auto it = best.record.find(session.diskCount);
-    std::string display = (it != best.record.end())
+    std::string display = (it != best.record.end() && it->second > 0)
         ? std::to_string(it->second) : "--";
 
     auto view = reg.view<TextLabel, BestCounterTag>();

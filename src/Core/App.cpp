@@ -27,6 +27,8 @@
 #include "Component/Position.h"
 #include "Component/StaticSprite.h"
 
+#include "Core/SaveManager.h"
+
 App::App()
     : reg(), res(reg), scheduler(reg, res) {
     //注册System
@@ -51,6 +53,7 @@ App::App()
     
     //scheduler.add(std::make_unique<>());
     
+    SaveManager::load(res);
     SceneSetup::build(reg, res);
     scheduler.enterScene("gameplay");
     
@@ -118,4 +121,5 @@ void App::run() {
         EndDrawing();
     }
 
+    SaveManager::save(reg);
 }

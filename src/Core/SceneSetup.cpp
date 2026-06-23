@@ -6,15 +6,30 @@
 #include "Component/Panel.h"
 
 #include "Component/NeedleIndex.h"
+#include "Component/SessionState.h"
+#include "Component/BestRecord.h"
+#include "Component/Position.h"
+#include "Component/NeedleStack.h"
 
 void SceneSetup::build(entt::registry& reg, Resource& res) {
     auto& f = res.factory;
+    auto& cache = res.setupCache;
 
     // 数据实体
-    f.createSessionState(3);
-    f.createNextSessionConfig(3);
+    auto sessionEntity = f.createSessionState(cache.diskCount);
+    f.createNextSessionConfig(cache.nextDiskCount);
     f.createBestRecord();
     f.createSettings();
+
+    auto& session = reg.get<SessionState>(sessionEntity);
+    session.stepCount  = cache.stepCount;
+    session.isAutoDemo = cache.isAutoDemo;
+    session.completed  = cache.completed;
+
+    auto bestView = reg.view<BestRecord>();
+    if (bestView.begin() != bestView.end()) {
+        reg.get<BestRecord>(*bestView.begin()).record = cache.bestRecords;
+    }
 
     // 背景
     f.createBackground();
@@ -40,11 +55,14 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
 
     // 文字
     f.createText(38, 530, "Steps:", 30, LIGHTGRAY, 3);
-    f.createTextWithTag<StepCounterTag>(150, 530, "0", 30, WHITE, 3);
+    f.createTextWithTag<StepCounterTag>(150, 530, std::to_string(cache.stepCount), 30, WHITE, 3);
     f.createText(38, 570, "Best:", 30, LIGHTGRAY, 3);
-    f.createTextWithTag<BestCounterTag>(140, 570, "--", 30, WHITE, 3);
+    f.createTextWithTag<BestCounterTag>(140, 570, 
+        (cache.bestRecords[cache.diskCount] == 0) ?
+        "--" :
+        std::to_string(cache.bestRecords[cache.diskCount]), 30, WHITE, 3);
 
-    f.createTextWithTag<DiskCountTag>(125, 642, "3", 36, BLUE, 3);
+    f.createTextWithTag<DiskCountTag>(125, 642, std::to_string(cache.diskCount), 36, BLUE, 3);
     
     // 设置面板
     const float panelX = 2560.0f;
@@ -67,12 +85,19 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
 
     // 找左柱 → 放初始盘子
     auto needleView = reg.view<NeedleIndex>();
-    entt::entity leftNeedle = entt::null;
     for (auto [entity, idx] : needleView.each()) {
-        if (idx.index == 0) { leftNeedle = entity; break; }
-    }
-    if (leftNeedle != entt::null) {
-        f.createDisksOnNeedle(leftNeedle);
+        auto& stack = reg.get<NeedleStack>(entity);
+        stack.disks.clear();
+
+        auto& needlePos = reg.get<Position>(entity);
+        auto& diskSizes = cache.needles[idx.index].diskSizes;
+
+        for (int i = 0; i < (int)diskSizes.size(); i++) {
+            int diskIndex = diskSizes[i];   // cache 存的是 diskSize，即 diskIndex
+            float diskY = needlePos.y + res.diskBaseOffset - i * res.diskHeight;
+            auto disk = f.createDisk(needlePos.x, diskY, diskIndex, cache.diskCount);
+            stack.disks.push_back(disk);
+        }
     }
 
     // 设置
