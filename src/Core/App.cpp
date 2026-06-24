@@ -66,6 +66,14 @@ App::App()
 
 void App::run() {
 
+    // 第一次启动打开说明面板
+    if (!SaveManager::hasSave()) {
+        auto btnView = reg.view<SettingsPanelToggleTag>();
+        if (btnView.begin() != btnView.end()) {
+            res.events.trigger(ButtonClickedEvent{*btnView.begin()});
+        }
+    }
+
     while (!WindowShouldClose()) {
 
         //检查窗口更新

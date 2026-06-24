@@ -180,3 +180,7 @@ void SaveManager::save(entt::registry& reg) {
         }
     }
 }
+
+bool SaveManager::hasSave() {
+    return fileExists(sessionPath());
+}

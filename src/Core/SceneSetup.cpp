@@ -1,6 +1,8 @@
 #include "SceneSetup.h"
 
 #include "Core/Resource.h"
+#include "Core/SaveManager.h"
+
 #include "Core/EntityFactory.h"
 #include "Component/Tags.h"
 #include "Component/Panel.h"
@@ -14,6 +16,7 @@
 #include "Component/ButtonState.h"
 #include "Component/SpriteStates.h"
 
+#include "Event/ButtonClickedEvent.h"
 
 void SceneSetup::build(entt::registry& reg, Resource& res) {
     auto& f = res.factory;
@@ -69,26 +72,26 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     auto& rightArrowButton = reg.emplace<SpriteStates>(rightArrow);
     rightArrowButton.width = 50;
     rightArrowButton.height = 50;
-    rightArrowButton.textures[0]                              = LoadTexture("assets/Texture/rightArrow.png");
-    rightArrowButton.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/rightArrowPressed.png");
+    rightArrowButton.textures[0]                             = LoadTexture("assets/Texture/rightArrow.png");
+    rightArrowButton.textures[(int)ButtonVisual::Pressed]    = LoadTexture("assets/Texture/rightArrowPressed.png");
 
     auto& autoSS = reg.emplace<SpriteStates>(autoDemo);
     autoSS.width = 50;
     autoSS.height = 50;
-    autoSS.textures[0]                              = LoadTexture("assets/Texture/autoButton.png");
-    autoSS.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/autoButtonPressed.png");
+    autoSS.textures[0]                                       = LoadTexture("assets/Texture/autoButton.png");
+    autoSS.textures[(int)ButtonVisual::Pressed]              = LoadTexture("assets/Texture/autoButtonPressed.png");
 
     auto& resetSS = reg.emplace<SpriteStates>(reset);
     resetSS.width = 50;
     resetSS.height = 50;
-    resetSS.textures[0]                              = LoadTexture("assets/Texture/resetButton.png");
-    resetSS.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/resetButtonPressed.png");
+    resetSS.textures[0]                                      = LoadTexture("assets/Texture/resetButton.png");
+    resetSS.textures[(int)ButtonVisual::Pressed]             = LoadTexture("assets/Texture/resetButtonPressed.png");
 
     auto& settingsSS = reg.emplace<SpriteStates>(settings);
     settingsSS.width = 50;
     settingsSS.height = 50;
-    settingsSS.textures[0]                              = LoadTexture("assets/Texture/helpButton.png");
-    settingsSS.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/helpButtonPressed.png");
+    settingsSS.textures[0]                                   = LoadTexture("assets/Texture/helpButton.png");
+    settingsSS.textures[(int)ButtonVisual::Pressed]          = LoadTexture("assets/Texture/helpButtonPressed.png");
 
     // 文字
     f.createText(38, 540, "Steps:", 30, LIGHTGRAY, 3);
@@ -110,10 +113,10 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     reg.emplace<PanelCloseTag>(settingsX);
 
     // 指示灯
-    auto diskInd = f.createIndicator(135, 620, 3);
+    auto diskInd = f.createIndicator(135, 625, 3);
     reg.emplace<DiskCountIndicatorTag>(diskInd);
 
-    auto autoInd = f.createIndicator(290, 620, 3);
+    auto autoInd = f.createIndicator(290, 625, 3);
     reg.emplace<AutoDemoIndicatorTag>(autoInd);
 
 
@@ -200,4 +203,5 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
 
     reg.emplace<PanelCloseTag>(exit);
     reg.emplace<SettingsPanelChildTag>(exit);
+
 }
