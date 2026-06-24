@@ -34,11 +34,10 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libx11-dev libxcursor-dev \
-            libxrandr-dev libxinerama-dev libxi-dev libasound2-dev
+          sudo apt-get install -y libgl1-mesa-dev
 
       - name: Conan install
-        run: conan install . --output-folder=. --build=missing -s build_type=Release
+        run: conan install . --output-folder=. --build=missing -s build_type=Release -c tools.system.package_manager:mode=install
 
       - name: CMake configure
         run: cmake --preset conan-default
