@@ -74,7 +74,19 @@ jobs:
       - name: CMake build
         run: cmake --build ${{ env.BUILD_DIR }} --config Release
 
-      - name: Package ZIP
+      - name: Package ZIP (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          if [ -d "${{ env.BUILD_DIR }}/Release" ]; then
+            BIN_DIR="${{ env.BUILD_DIR }}/Release"
+          else
+            BIN_DIR="${{ env.BUILD_DIR }}"
+          fi
+          powershell Compress-Archive -Path "$BIN_DIR\\*" -DestinationPath "${{ matrix.artifact }}.zip"
+
+      - name: Package ZIP (Linux/macOS)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           if [ -d "${{ env.BUILD_DIR }}/Release" ]; then
