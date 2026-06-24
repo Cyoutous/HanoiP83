@@ -8,6 +8,8 @@
 #include "Core/EntityFactory.h"
 #include "Component/SessionState.h"
 #include "Component/NextSessionConfig.h"
+#include "Component/TweenPosition.h"
+#include "Component/TweenSequence.h"
 #include "Component/NeedleStack.h"
 #include "Component/NeedleIndex.h"
 #include "Component/Position.h"
@@ -71,10 +73,20 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
     // 清空残留的 actionQueue  ???
     while (!res.actionQueue.empty()) res.actionQueue.pop();
 
+    // 清空残留的 actionQueue
+    while (!res.actionQueue.empty()) res.actionQueue.pop();
+
+    // 清空所有盘子的动画
+    auto diskView = reg.view<const DiskData>();
+    for (auto entity : diskView) {
+        reg.remove<TweenPosition, TweenSequence>(entity);
+    }
+
     // ── 销毁旧盘子 ──
     auto disks = reg.view<const DiskData>();
-    for (auto entity : disks) {
-        reg.destroy(entity);
+    std::vector<entt::entity> toDestroy(disks.begin(), disks.end());
+    for (auto entity : toDestroy) {
+        if (reg.valid(entity)) reg.destroy(entity);
     }
 
     // ── 销毁旧 SessionState ──

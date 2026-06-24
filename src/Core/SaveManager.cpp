@@ -110,33 +110,62 @@ void SaveManager::save(entt::registry& reg) {
         std::ofstream out(sessionPath());
 
         auto sessionView = reg.view<const SessionState>();
-        if (sessionView.begin() != sessionView.end()) {
-            auto& s = reg.get<const SessionState>(*sessionView.begin());
-            out << "diskCount="  << s.diskCount  << "\n";
-            out << "stepCount="  << s.stepCount  << "\n";
-            out << "isAutoDemo=" << (s.isAutoDemo ? 1 : 0) << "\n";
-            out << "completed="  << (s.completed  ? 1 : 0) << "\n";
-        }
-
         auto nextView = reg.view<const NextSessionConfig>();
-        if (nextView.begin() != nextView.end()) {
-            auto& n = reg.get<const NextSessionConfig>(*nextView.begin());
-            out << "nextDiskCount=" << n.diskCount << "\n";
-            out << "nextAutoDemo="  << (n.autoDemo ? 1 : 0) << "\n";
+
+        // 获取盘数（自动分支）
+        int diskCount = 3;
+        if (sessionView.begin() != sessionView.end()) {
+            diskCount = reg.get<const SessionState>(*sessionView.begin()).diskCount;
         }
 
-        auto needleView = reg.view<const NeedleStack, const NeedleIndex>();
-        std::vector<std::pair<int, std::string>> needleLines;
-        for (auto [entity, stack, idx] : needleView.each()) {
-            needleLines.push_back({
-                idx.index,
-                "n" + std::to_string(idx.index) + "=" + serializeDisks(stack.disks, reg)
-            });
+        bool isAutoDemo = false;
+        if (sessionView.begin() != sessionView.end()) {
+            isAutoDemo = reg.get<const SessionState>(*sessionView.begin()).isAutoDemo;
         }
-        std::sort(needleLines.begin(), needleLines.end());
-        for (auto& [_, line] : needleLines) {
-            out << line << "\n";
+
+        if (isAutoDemo) {
+            // 自动演示状态不保存 — 写干净开局
+            out << "diskCount="  << diskCount << "\n";
+            out << "stepCount="  << 0 << "\n";
+            out << "isAutoDemo=" << 0 << "\n";
+            out << "completed="  << 0 << "\n";
+            out << "nextDiskCount=" << diskCount << "\n";
+            out << "nextAutoDemo="  << 0 << "\n";
+            out << "n0=";
+            for (int i = 0; i < diskCount; i++) out << (i > 0 ? "," : "") << i;
+            out << "\nn1=\nn2=\n";
         }
+        else {
+            // 不处于自动演示状态
+            if (sessionView.begin() != sessionView.end()) {
+                auto& s = reg.get<const SessionState>(*sessionView.begin());
+                out << "diskCount="  << s.diskCount  << "\n";
+                out << "stepCount="  << s.stepCount  << "\n";
+                out << "isAutoDemo=" << (s.isAutoDemo ? 1 : 0) << "\n";
+                out << "completed="  << (s.completed  ? 1 : 0) << "\n";
+            }
+    
+            if (nextView.begin() != nextView.end()) {
+                auto& n = reg.get<const NextSessionConfig>(*nextView.begin());
+                out << "nextDiskCount=" << n.diskCount << "\n";
+                out << "nextAutoDemo="  << (n.autoDemo ? 1 : 0) << "\n";
+            }
+    
+            auto needleView = reg.view<const NeedleStack, const NeedleIndex>();
+            std::vector<std::pair<int, std::string>> needleLines;
+            for (auto [entity, stack, idx] : needleView.each()) {
+                needleLines.push_back({
+                    idx.index,
+                    "n" + std::to_string(idx.index) + "=" + serializeDisks(stack.disks, reg)
+                });
+            }
+            std::sort(needleLines.begin(), needleLines.end());
+            for (auto& [_, line] : needleLines) {
+                out << line << "\n";
+            }
+
+        }
+
     }
 
     // best.dat

@@ -27,6 +27,8 @@ void AutoDemoSystem::init(entt::registry& reg) {
     for (auto [entity, data] : diskView.each()) {
         if (data.size == targetSize) {
             _smallest = entity;
+            if (!reg.valid(_smallest)) return;
+
             break;
         }
     }
@@ -133,7 +135,7 @@ void AutoDemoSystem::onUpdate(entt::registry& reg, Resource& res) {
     }
 
     // 首次 → 初始化
-    if (_moveIndex == 0) init(reg);
+    if (_moveIndex == 0 || !reg.valid(_smallest)) init(reg);
 
     // 队列非空 → 等 MoveExecutionSystem 消费
     if (!res.actionQueue.empty()) return;
