@@ -177,9 +177,17 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     // reg.emplace<SettingsCancelTag>(cancel);
     // reg.emplace<SettingsPanelChildTag>(cancel);
 
-    // auto namePlainText = f.createText(panelX - 130, panelY - 35, "HanoiP83", 72, WHITE, 5);
-    // reg.emplace<SettingsPanelChildTag>(namePlainText);
-    // reg.emplace<SettingsPanelChildTag>(namePlainText);
+    auto helpPlainText1 = f.createText(panelX - 130, panelY + 45, " -   change disk number", 30, WHITE, 5);
+    reg.emplace<SettingsPanelChildTag>(helpPlainText1);
+    reg.emplace<SettingsPanelChildTag>(helpPlainText1);
+
+    auto helpPlainText2 = f.createText(panelX - 130, panelY + 125, " -   auto demo", 30, WHITE, 5);
+    reg.emplace<SettingsPanelChildTag>(helpPlainText2);
+    reg.emplace<SettingsPanelChildTag>(helpPlainText2);
+
+    auto helpPlainText3 = f.createText(panelX - 130, panelY + 205, " -   reset", 30, WHITE, 5);
+    reg.emplace<SettingsPanelChildTag>(helpPlainText3);
+    reg.emplace<SettingsPanelChildTag>(helpPlainText3);
 
     // X按钮
     auto exit = f.createInstantButton(panelX + 580, panelY + 300, 50, 50, 5);

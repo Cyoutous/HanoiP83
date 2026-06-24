@@ -156,7 +156,7 @@ entt::entity EntityFactory::createPanel(float x, float y, float w, float h,
     auto& ss = reg.emplace<SpriteStates>(entity);
     ss.width = 1280.0f;
     ss.height = 720.0f;
-    ss.textures[0] = LoadTexture("assets/Texture/cover.png");
+    ss.textures[0] = LoadTexture("assets/Texture/cover2.png");
 
     reg.emplace<Clickable>(entity, Vector2{-w / 2, -h / 2}, w, h);
     reg.emplace<Panel>(entity, type, false);
