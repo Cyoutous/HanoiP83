@@ -3,6 +3,7 @@
 #include "raylib.h"
 
 #include "Core/SceneSetup.h"
+#include "Core/SaveManager.h"
 
 #include "System/TestRenderSystem.h"
 #include "System/InputSystem.h"
@@ -28,8 +29,8 @@
 
 #include "Component/Position.h"
 #include "Component/StaticSprite.h"
+#include "Component/Tags.h"
 
-#include "Core/SaveManager.h"
 
 App::App()
     : reg(), res(reg), scheduler(reg, res) {

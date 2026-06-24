@@ -81,7 +81,9 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
 
 
     // 遮罩
-    f.createOverlay(-640.0f, 360.0f, 1280.0f, 720.0f, 6);
+    //f.createOverlay(-640.0f, 360.0f, 1280.0f, 720.0f, 6);
+    //f.createOverlay(640.0f, 360.0f, 1280.0f, 720.0f, 6);
+
 
     // 找左柱 → 放初始盘子
     auto needleView = reg.view<NeedleIndex>();
@@ -138,9 +140,9 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     // reg.emplace<SettingsCancelTag>(cancel);
     // reg.emplace<SettingsPanelChildTag>(cancel);
 
-    auto namePlainText = f.createText(panelX - 130, panelY - 35, "HanoiP83", 72, WHITE, 5);
-    reg.emplace<SettingsPanelChildTag>(namePlainText);
-    reg.emplace<SettingsPanelChildTag>(namePlainText);
+    // auto namePlainText = f.createText(panelX - 130, panelY - 35, "HanoiP83", 72, WHITE, 5);
+    // reg.emplace<SettingsPanelChildTag>(namePlainText);
+    // reg.emplace<SettingsPanelChildTag>(namePlainText);
 
     // X按钮
     auto exit = f.createInstantButton(panelX + 580, panelY + 300, 50, 50, 5);

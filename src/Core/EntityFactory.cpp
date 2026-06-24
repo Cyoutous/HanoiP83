@@ -38,11 +38,11 @@ entt::entity EntityFactory::createNeedle(float x, float y, int index) {
     reg.emplace<Layer>(entity, 1);
     //reg.emplace<RectVisual>(entity, 16.0f, res.needleHeight, GRAY);   // 柱宽16, 高280
     auto& ss = reg.emplace<SpriteStates>(entity);
-    ss.width = 280;
+    ss.width = 16;
     ss.height = 280;
-    ss.textures[0]                              = LoadTexture("assets/Texture/shift_weak_power.png");
-    ss.textures[(int)NeedleVisual::Selected]    = LoadTexture("assets/Texture/shift_weak_power.png");
-    ss.textures[(int)NeedleVisual::InvalidTarget] = LoadTexture("assets/Texture/shift_weak_power.png");
+    ss.textures[0]                              = LoadTexture("assets/Texture/Needle1.png");
+    ss.textures[(int)NeedleVisual::Selected]    = LoadTexture("assets/Texture/Needle2.png");
+    ss.textures[(int)NeedleVisual::InvalidTarget] = LoadTexture("assets/Texture/Needle3.png");
 
     float clickW = 280.0f;
     float clickH = res.needleHeight;
@@ -60,8 +60,13 @@ entt::entity EntityFactory::createDisk(float x, float y, int diskIndex, int tota
     float w = diskWidth(diskIndex, totalDisks);
     float h = res.diskHeight;
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, w, h, ColorFromHSV(diskIndex * 50.0f, 0.7f, 0.9f));
     reg.emplace<Layer>(entity, 2);
+    //reg.emplace<RectVisual>(entity, w, h, ColorFromHSV(diskIndex * 50.0f, 0.7f, 0.9f));
+    auto& ss = reg.emplace<SpriteStates>(entity);
+    ss.width = w;
+    ss.height = h;
+    ss.textures[0] = LoadTexture(TextFormat("assets/Texture/Disk%d.png", diskIndex));
+    
     reg.emplace<DiskData>(entity, diskIndex);
     reg.emplace<Interpolated>(entity, x, y);          // 固定步长插值
     return entity;
@@ -140,8 +145,13 @@ entt::entity EntityFactory::createPanel(float x, float y, float w, float h,
                                         int layer, PanelType type) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, w, h, Color{40, 40, 40, 255});
     reg.emplace<Layer>(entity, layer);
+    //reg.emplace<RectVisual>(entity, w, h, Color{40, 40, 40, 255});
+    auto& ss = reg.emplace<SpriteStates>(entity);
+    ss.width = 1280.0f;
+    ss.height = 720.0f;
+    ss.textures[0] = LoadTexture("assets/Texture/cover.png");
+
     reg.emplace<Clickable>(entity, Vector2{-w / 2, -h / 2}, w, h);
     reg.emplace<Panel>(entity, type, false);
     reg.emplace<Interpolated>(entity);    // 滑入滑出需要插值
@@ -152,8 +162,9 @@ entt::entity EntityFactory::createPanel(float x, float y, float w, float h,
 entt::entity EntityFactory::createOverlay(float x, float y, float w, float h, int layer) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, w, h, Fade(BLACK, 0.5f));
     reg.emplace<Layer>(entity, layer);
+    reg.emplace<RectVisual>(entity, w, h, Fade(BLACK, 0.5f));
+
     reg.emplace<Interpolated>(entity);
     return entity;
 }
@@ -182,24 +193,4 @@ entt::entity EntityFactory::createHistoryEntry(int diskCount, int steps,
     auto entity = reg.create();
     reg.emplace<HistoryEntry>(entity, HistoryEntry{diskCount, steps, completed, timestamp});
     return entity;
-}
-
-// 临时
-void EntityFactory::createDisksOnNeedle(entt::entity needle) {
-    auto& needlePos = reg.get<Position>(needle);
-    auto& stack = reg.get<NeedleStack>(needle);
-    stack.disks.clear();
-
-     // 读 SessionState 拿盘数
-    auto sessionView = reg.view<const SessionState>();
-    if (sessionView.begin() == sessionView.end()) return;
-    int diskCount = reg.get<const SessionState>(*sessionView.begin()).diskCount;
-
-
-    for (int i = 0; i < diskCount; i++) {
-        int diskIndex = i;
-        float diskY = needlePos.y + res.diskBaseOffset - i * res.diskHeight;
-        auto disk = createDisk(needlePos.x, diskY, diskIndex, diskCount);
-        stack.disks.push_back(disk);
-    }
 }
