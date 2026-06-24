@@ -6,7 +6,7 @@
 
 #include "WindowState.h"
 #include "EntityFactory.h"
-#include "Type/moveAction.h"
+#include "Type/MoveAction.h"
 #include "Type/SetupCache.h"
 
 struct Resource
