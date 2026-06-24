@@ -12,10 +12,11 @@ find_package(raylib REQUIRED)
 find_package(EnTT REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
-add_executable(hanoip83 WIN32 ${SOURCES})
-
-if(MSVC)
-target_link_options(hanoip83 PRIVATE "/ENTRY:mainCRTStartup")
+if(WIN32)
+    add_executable(hanoip83 WIN32 ${SOURCES})
+    target_link_options(hanoip83 PRIVATE "/ENTRY:mainCRTStartup")
+else()
+    add_executable(hanoip83 ${SOURCES})
 endif()
 
 target_include_directories(hanoip83 PRIVATE src)
