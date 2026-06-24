@@ -98,22 +98,24 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     settingsSS.textures[(int)ButtonVisual::Pressed]          = LoadTexture("assets/Texture/helpButtonPressed.png");
 
     // 文字
-    f.createText(38, 540, "Steps:", 30, LIGHTGRAY, 3);
-    f.createTextWithTag<StepCounterTag>(150, 540, std::to_string(cache.stepCount), 30, WHITE, 3);
-    f.createText(38, 580, "Best:", 30, LIGHTGRAY, 3);
-    f.createTextWithTag<BestCounterTag>(140, 580, 
+    f.createText(140, 70, "STEP:", 26, LIGHTGRAY, 3);
+    f.createTextWithTag<StepCounterTag>(240, 70, std::to_string(cache.stepCount), 26, LIGHTGRAY, 3);
+    f.createText(140, 100, "TIME:", 26, LIGHTGRAY, 3);
+    f.createTextWithTag<TimerDisplayTag>(240, 100, "--", 26, LIGHTGRAY, 3);
+    
+    f.createText(140, 160, "BESTS", 26, LIGHTGRAY, 3);
+    f.createText(140, 190, "Step:", 26, YELLOW, 3);
+    f.createTextWithTag<BestCounterTag>(240, 190, 
         (cache.bestRecords[cache.diskCount] == 0) ?
         "--" :
-        std::to_string(cache.bestRecords[cache.diskCount]), 30, WHITE, 3);
-
-    f.createTextWithTag<DiskCountTag>(125, 642, std::to_string(cache.diskCount), 36, BLUE, 3);
-
-    f.createTextWithTag<TimerDisplayTag>(640, 30, "--", 24, LIGHTGRAY, 3);
-    f.createTextWithTag<BestTimeTag>(640, 580, 
+        std::to_string(cache.bestRecords[cache.diskCount]), 26, YELLOW, 3);
+    f.createText(140, 220, "Time:", 26, YELLOW, 3);
+    f.createTextWithTag<BestTimeTag>(240, 220, 
         (cache.bestTimes.count(cache.diskCount) && cache.bestTimes[cache.diskCount] > 0.0f) 
-            ? TextFormat("%.1fs", cache.bestTimes[cache.diskCount]) : "--", 
-        30, WHITE, 3);
-
+        ? TextFormat("%.1fs", cache.bestTimes[cache.diskCount]) : "--", 
+        26, YELLOW, 3);
+            
+    f.createTextWithTag<DiskCountTag>(125, 642, std::to_string(cache.diskCount), 36, BLUE, 3);
 
     
     // 设置面板
