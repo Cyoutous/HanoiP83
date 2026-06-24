@@ -15,7 +15,7 @@ class SettingsSystem : public ISystem {
     int _debugClickCount = 0;
     bool _onStartCalled = false;
 
-    void onButtonClicked(ButtonClickedEvent& event);
+    //void onButtonClicked(ButtonClickedEvent& event);
     //void onSettingsButtonClicked(SettingsButtonEvent& event);
     void populatePending(entt::registry& reg);
     void closePanel(entt::entity panel);
