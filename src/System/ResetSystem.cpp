@@ -76,9 +76,6 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
         stack.disks.clear();
     }
 
-    // 清空残留的 actionQueue  ???
-    while (!res.actionQueue.empty()) res.actionQueue.pop();
-
     // 清空残留的 actionQueue
     while (!res.actionQueue.empty()) res.actionQueue.pop();
 
@@ -128,7 +125,7 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
     }
 
     // ── 通知 ──
-    res.events.trigger<SessionStateChangedEvent>();
+    res.events.trigger(SessionStateChangedEvent{});
 }
 
 // ---------- 生命周期 ----------

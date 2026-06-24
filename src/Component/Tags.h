@@ -5,6 +5,7 @@ struct BestCounterTag { };
 struct DiskCountTag { };
 struct BestTimeTag { };
 struct TimerDisplayTag { };
+struct RecordPopupTag {};
 
 struct ResetButtonTag {};
 struct AutoDemoButtonTag {};

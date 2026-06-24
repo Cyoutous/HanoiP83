@@ -3,11 +3,14 @@
 #include <climits>
 
 #include "Core/Resource.h"
+
 #include "Component/SessionState.h"
 #include "Component/BestRecord.h"
 #include "Component/NeedleStack.h"
 #include "Component/NeedleIndex.h"
+
 #include "Event/BestRecordChangedEvent.h"
+#include "Event/RecordBrokenEvent.h"
 
 std::string_view GamePhaseSystem::name() const { 
     return "gamePhase"; 
@@ -64,12 +67,14 @@ void GamePhaseSystem::onUpdate(entt::registry& reg, Resource& res) {
             best.bestTimes[session.diskCount] = session.elapsedTime;
         }
         changed = true;
+        res.events.trigger(RecordBrokenEvent{RecordType::Step});
     } else if (session.stepCount == stepBest && session.timerRunning) {
         // 步数持平 → 比较时间
         auto timeIt = best.bestTimes.find(session.diskCount);
         if (timeIt == best.bestTimes.end() || session.elapsedTime < timeIt->second) {
             best.bestTimes[session.diskCount] = session.elapsedTime;
             changed = true;
+            res.events.trigger(RecordBrokenEvent{RecordType::Time});
         }
     }
 

@@ -57,7 +57,7 @@ void MoveExecutionSystem::onUpdate(entt::registry& reg, Resource& res) {
 
     // 步数 +1
     session.stepCount++;
-    res.events.trigger<SessionStateChangedEvent>();
+    res.events.trigger(SessionStateChangedEvent{});
 
     // 堆叠索引 = toStack 当前大小
     int stackIndex = (int)toStack.disks.size();

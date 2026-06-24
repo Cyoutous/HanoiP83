@@ -43,9 +43,4 @@ inline SetupCache::SetupCache() {
         {1, {}},
         {2, {}}
     };
-
-    for (int d = 3; d <= 10; ++d) {
-        bestRecords[d] = 0;
-        //bestTimes[d] = 0.0f;
-    }
 }

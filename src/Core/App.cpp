@@ -13,6 +13,7 @@
 #include "System/PanelSystem.h"
 #include "System/IndicatorSystem.h"
 #include "System/SettingsSystem.h"
+#include "System/RecordPopupSystem.h"
 
 #include "System/TweenSystem.h"
 #include "System/MoveSnapshotSystem.h"
@@ -43,7 +44,8 @@ App::App()
     scheduler.add(std::make_unique<PanelSystem>());
     scheduler.add(std::make_unique<IndicatorSystem>());
     scheduler.add(std::make_unique<SettingsSystem>());
-    
+    scheduler.add(std::make_unique<RecordPopupSystem>());
+
     scheduler.add(std::make_unique<TweenSystem>());
     scheduler.add(std::make_unique<MoveSnapshotSystem>());
     scheduler.add(std::make_unique<MoveExecutionSystem>());
@@ -106,14 +108,15 @@ void App::run() {
 
         // - 执行逻辑系统 - 
         scheduler.runLogic();
-        res.events.update(); //刷新事件
-
+        
         // - 执行固定步长系统 - 
         while (res.accumulator >= res.fixedDt) {
             scheduler.runFixedUpdate();
             res.accumulator -= res.fixedDt;
         }
-
+        
+        res.events.update(); //刷新事件
+        
         // 插值因子 = 剩余时间占固定步长的比例
         res.alpha = res.accumulator / res.fixedDt;
 

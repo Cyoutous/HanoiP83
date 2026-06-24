@@ -106,17 +106,18 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     f.createText(140, 160, "BESTS", 26, LIGHTGRAY, 3);
     f.createText(140, 190, "Step:", 26, YELLOW, 3);
     f.createTextWithTag<BestCounterTag>(240, 190, 
-        (cache.bestRecords[cache.diskCount] == 0) ?
-        "--" :
-        std::to_string(cache.bestRecords[cache.diskCount]), 26, YELLOW, 3);
+    (cache.bestRecords.count(cache.diskCount) && cache.bestRecords[cache.diskCount] > 0) ?
+        std::to_string(cache.bestRecords[cache.diskCount]) : "--",
+        26, YELLOW, 3);
     f.createText(140, 220, "Time:", 26, YELLOW, 3);
     f.createTextWithTag<BestTimeTag>(240, 220, 
         (cache.bestTimes.count(cache.diskCount) && cache.bestTimes[cache.diskCount] > 0.0f) 
         ? TextFormat("%.1fs", cache.bestTimes[cache.diskCount]) : "--", 
         26, YELLOW, 3);
             
-    f.createTextWithTag<DiskCountTag>(125, 642, std::to_string(cache.diskCount), 36, BLUE, 3);
+    f.createTextWithTag<RecordPopupTag>(140, 280, "", 24, GREEN, 3);
 
+    f.createTextWithTag<DiskCountTag>(125, 642, std::to_string(cache.diskCount), 36, BLUE, 3);
     
     // 设置面板
     const float panelX = 2560.0f;
@@ -127,10 +128,10 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     reg.emplace<PanelCloseTag>(settingsX);
 
     // 指示灯
-    auto diskInd = f.createIndicator(135, 625, 3);
+    auto diskInd = f.createIndicator(135, 620, 3);
     reg.emplace<DiskCountIndicatorTag>(diskInd);
 
-    auto autoInd = f.createIndicator(290, 625, 3);
+    auto autoInd = f.createIndicator(290, 620, 3);
     reg.emplace<AutoDemoIndicatorTag>(autoInd);
 
 

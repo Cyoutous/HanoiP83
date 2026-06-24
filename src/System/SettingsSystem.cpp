@@ -76,87 +76,87 @@ void SettingsSystem::updateDisplay(entt::registry& reg) {
 }
 
 // ---------- 事件处理 ----------
+// 弃用。MSVC连接不稳定。
+// void SettingsSystem::onButtonClicked(ButtonClickedEvent& event) {
 
-void SettingsSystem::onButtonClicked(ButtonClickedEvent& event) {
-
-    auto& reg = *_reg;
-    auto& res = *_res;
+//     auto& reg = *_reg;
+//     auto& res = *_res;
 
 
-    // 设置面板按钮被点 → 面板刚打开时填充 PendingSettings
-    // 这段貌似没能起作用
-    if (reg.all_of<SettingsPanelToggleTag>(event.button)) {
-        auto panel = findPanel();
-        if (panel == entt::null) return;
-        auto& p = reg.get<Panel>(panel);
-        if (p.isOpen) populatePending(reg);
-        return;
-    }
+//     // 设置面板按钮被点 → 面板刚打开时填充 PendingSettings
+//     // 这段貌似没能起作用
+//     if (reg.all_of<SettingsPanelToggleTag>(event.button)) {
+//         auto panel = findPanel();
+//         if (panel == entt::null) return;
+//         auto& p = reg.get<Panel>(panel);
+//         if (p.isOpen) populatePending(reg);
+//         return;
+//     }
 
-    printf("[Settings] button clicked, entity=%u\n", (unsigned)event.button);
+//     printf("[Settings] button clicked, entity=%u\n", (unsigned)event.button);
 
-    auto panel = findPanel();
-    if (panel == entt::null || !reg.all_of<PendingSetting>(panel)) return;
-    auto& pend = reg.get<PendingSetting>(panel);
+//     auto panel = findPanel();
+//     if (panel == entt::null || !reg.all_of<PendingSetting>(panel)) return;
+//     auto& pend = reg.get<PendingSetting>(panel);
 
-    // 确认
-    if (reg.all_of<SettingsConfirmTag>(event.button)) {
-        auto settingsView = reg.view<Settings>();
-        if (settingsView.begin() != settingsView.end()) {
-            auto& settings = reg.get<Settings>(*settingsView.begin());
-            settings.volume = pend.pendingVolume;
-            settings.resolutionW = RESOLUTIONS[pend.pendingResolutionIndex].first;
-            settings.resolutionH = RESOLUTIONS[pend.pendingResolutionIndex].second;
+//     // 确认
+//     if (reg.all_of<SettingsConfirmTag>(event.button)) {
+//         auto settingsView = reg.view<Settings>();
+//         if (settingsView.begin() != settingsView.end()) {
+//             auto& settings = reg.get<Settings>(*settingsView.begin());
+//             settings.volume = pend.pendingVolume;
+//             settings.resolutionW = RESOLUTIONS[pend.pendingResolutionIndex].first;
+//             settings.resolutionH = RESOLUTIONS[pend.pendingResolutionIndex].second;
 
-            SetMasterVolume(settings.volume);
-            SetWindowSize(settings.resolutionW, settings.resolutionH);
-        }
-        reg.remove<PendingSetting>(panel);
-        return;
-    }
+//             SetMasterVolume(settings.volume);
+//             SetWindowSize(settings.resolutionW, settings.resolutionH);
+//         }
+//         reg.remove<PendingSetting>(panel);
+//         return;
+//     }
 
-    printf("[Settings] resolution=%d\n", pend.pendingResolutionIndex);
+//     printf("[Settings] resolution=%d\n", pend.pendingResolutionIndex);
 
-    // 取消
-    if (reg.all_of<SettingsCancelTag>(event.button)) {
-        reg.remove<PendingSetting>(panel);
-        return;
-    }
+//     // 取消
+//     if (reg.all_of<SettingsCancelTag>(event.button)) {
+//         reg.remove<PendingSetting>(panel);
+//         return;
+//     }
 
-    // 音量
-    if (reg.all_of<VolumeUpTag>(event.button)) {
-        pend.pendingVolume = std::min(1.0f, pend.pendingVolume + 0.1f);
-        updateDisplay(reg);
-        return;
-    }
-    if (reg.all_of<VolumeDownTag>(event.button)) {
-        pend.pendingVolume = std::max(0.0f, pend.pendingVolume - 0.1f);
-        updateDisplay(reg);
-        return;
-    }
+//     // 音量
+//     if (reg.all_of<VolumeUpTag>(event.button)) {
+//         pend.pendingVolume = std::min(1.0f, pend.pendingVolume + 0.1f);
+//         updateDisplay(reg);
+//         return;
+//     }
+//     if (reg.all_of<VolumeDownTag>(event.button)) {
+//         pend.pendingVolume = std::max(0.0f, pend.pendingVolume - 0.1f);
+//         updateDisplay(reg);
+//         return;
+//     }
 
-    // 分辨率
-    if (reg.all_of<ResolutionNextTag>(event.button)) {
-        pend.pendingResolutionIndex = std::min((int)RESOLUTIONS.size() - 1,
-                                                pend.pendingResolutionIndex + 1);
-        updateDisplay(reg);
-        return;
-    }
-    if (reg.all_of<ResolutionPrevTag>(event.button)) {
-        pend.pendingResolutionIndex = std::max(0, pend.pendingResolutionIndex - 1);
-        updateDisplay(reg);
-        return;
-    }
+//     // 分辨率
+//     if (reg.all_of<ResolutionNextTag>(event.button)) {
+//         pend.pendingResolutionIndex = std::min((int)RESOLUTIONS.size() - 1,
+//                                                 pend.pendingResolutionIndex + 1);
+//         updateDisplay(reg);
+//         return;
+//     }
+//     if (reg.all_of<ResolutionPrevTag>(event.button)) {
+//         pend.pendingResolutionIndex = std::max(0, pend.pendingResolutionIndex - 1);
+//         updateDisplay(reg);
+//         return;
+//     }
 
-    // 删除最佳纪录
-    if (reg.all_of<DeleteBestRecordTag>(event.button)) {
-        auto bestView = reg.view<BestRecord>();
-        if (bestView.begin() != bestView.end()) {
-            reg.get<BestRecord>(*bestView.begin()).record.clear();
-            res.events.trigger(BestRecordChangedEvent{});
-        }
-    }
-}
+//     // 删除最佳纪录
+//     if (reg.all_of<DeleteBestRecordTag>(event.button)) {
+//         auto bestView = reg.view<BestRecord>();
+//         if (bestView.begin() != bestView.end()) {
+//             reg.get<BestRecord>(*bestView.begin()).record.clear();
+//             res.events.trigger(BestRecordChangedEvent{});
+//         }
+//     }
+// }
 
 // ---------- 生命周期 ----------
 

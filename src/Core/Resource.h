@@ -32,9 +32,9 @@ struct Resource
     float diskBaseOffset  = needleHeight / 2.0f - diskHeight/ 2.0f;
 
     const std::unordered_map<int, float> timeLimits = {
-    {3, 30.0f}, {4, 45.0f}, {5, 60.0f},
-    {6, 80.0f}, {7, 100.0f}, {8, 130.0f},
-    {9, 160.0f}
+    {3, 20.0f}, {4, 45.0f}, {5, 60.0f},
+    {6, 100.0f}, {7, 150.0f}, {8, 210.0f},
+    {9, 300.0f}
     };
     float defaultLimit = 9999.0f;
     
