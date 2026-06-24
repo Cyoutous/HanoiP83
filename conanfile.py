@@ -8,11 +8,11 @@ class hanoip83Recipe(ConanFile):
     package_type = "application"
 
     # Optional metadata
-    license = "<Put the package license here>"
-    author = "<Put your name here> <And your email here>"
-    url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of hanoip83 package here>"
-    topics = ("<Put some tag here>", "<here>", "<and here>")
+    license = "MIT"
+    author = "Cyoutous"
+    url = "https://github.com/Cyoutous/HanoiP83"
+    description = "A classic Tower of Hanoi puzzle game built with C++17, EnTT ECS, and raylib."
+    topics = ("game", "hanoi-tower", "entt", "raylib", "ecs")
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
