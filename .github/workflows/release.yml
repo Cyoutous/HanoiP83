@@ -51,19 +51,28 @@ jobs:
         run: conan install . --output-folder=. --build=missing -s build_type=Release
 
       - name: CMake configure
-        run: cmake --preset conan-default
+        shell: bash
+        run: |
+          if [ -f build/build/generators/conan_toolchain.cmake ]; then
+            TC="build/build/generators/conan_toolchain.cmake"
+            BUILD_DIR="build/build"
+          else
+            TC="build/generators/conan_toolchain.cmake"
+            BUILD_DIR="build"
+          fi
+          echo "BUILD_DIR=$BUILD_DIR" >> $GITHUB_ENV
+          cmake -B "$BUILD_DIR" -DCMAKE_TOOLCHAIN_FILE="$TC" -DCMAKE_BUILD_TYPE=Release
 
       - name: CMake build
-        run: cmake --build build --config Release
+        run: cmake --build ${{ env.BUILD_DIR }} --config Release
 
       - name: Package ZIP
         shell: bash
         run: |
-          # MSVC puts binary & assets under build/Release/, others under build/
-          if [ -d "build/Release" ]; then
-            BIN_DIR="build/Release"
+          if [ -d "${{ env.BUILD_DIR }}/Release" ]; then
+            BIN_DIR="${{ env.BUILD_DIR }}/Release"
           else
-            BIN_DIR="build"
+            BIN_DIR="${{ env.BUILD_DIR }}"
           fi
           cd "$BIN_DIR"
           zip -r ../../${{ matrix.artifact }}.zip .
