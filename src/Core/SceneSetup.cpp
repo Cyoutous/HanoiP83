@@ -11,6 +11,10 @@
 #include "Component/Position.h"
 #include "Component/NeedleStack.h"
 
+#include "Component/ButtonState.h"
+#include "Component/SpriteStates.h"
+
+
 void SceneSetup::build(entt::registry& reg, Resource& res) {
     auto& f = res.factory;
     auto& cache = res.setupCache;
@@ -35,9 +39,9 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     f.createBackground();
 
     // 三根柱子
-    f.createNeedle(350, 340, 0);
-    f.createNeedle(640, 340, 1);
-    f.createNeedle(930, 340, 2);
+    f.createNeedle(350, 310, 0);
+    f.createNeedle(640, 310, 1);
+    f.createNeedle(930, 310, 2);
 
     // 底部按钮栏
     auto leftArrow  = f.createInstantButton(60, 660, 50, 50, 3);
@@ -53,11 +57,44 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     auto settings  = f.createInstantButton(1220, 660, 50, 50, 3);
         reg.emplace<SettingsPanelToggleTag>(settings);
 
+
+    // 按钮贴图
+
+    auto& leftArrowButton = reg.emplace<SpriteStates>(leftArrow);
+    leftArrowButton.width = 50;
+    leftArrowButton.height = 50;
+    leftArrowButton.textures[0]                              = LoadTexture("assets/Texture/leftArrow.png");
+    leftArrowButton.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/leftArrowPressed.png");
+
+    auto& rightArrowButton = reg.emplace<SpriteStates>(rightArrow);
+    rightArrowButton.width = 50;
+    rightArrowButton.height = 50;
+    rightArrowButton.textures[0]                              = LoadTexture("assets/Texture/rightArrow.png");
+    rightArrowButton.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/rightArrowPressed.png");
+
+    auto& autoSS = reg.emplace<SpriteStates>(autoDemo);
+    autoSS.width = 50;
+    autoSS.height = 50;
+    autoSS.textures[0]                              = LoadTexture("assets/Texture/autoButton.png");
+    autoSS.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/autoButtonPressed.png");
+
+    auto& resetSS = reg.emplace<SpriteStates>(reset);
+    resetSS.width = 50;
+    resetSS.height = 50;
+    resetSS.textures[0]                              = LoadTexture("assets/Texture/resetButton.png");
+    resetSS.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/resetButtonPressed.png");
+
+    auto& settingsSS = reg.emplace<SpriteStates>(settings);
+    settingsSS.width = 50;
+    settingsSS.height = 50;
+    settingsSS.textures[0]                              = LoadTexture("assets/Texture/helpButton.png");
+    settingsSS.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/helpButtonPressed.png");
+
     // 文字
-    f.createText(38, 530, "Steps:", 30, LIGHTGRAY, 3);
-    f.createTextWithTag<StepCounterTag>(150, 530, std::to_string(cache.stepCount), 30, WHITE, 3);
-    f.createText(38, 570, "Best:", 30, LIGHTGRAY, 3);
-    f.createTextWithTag<BestCounterTag>(140, 570, 
+    f.createText(38, 540, "Steps:", 30, LIGHTGRAY, 3);
+    f.createTextWithTag<StepCounterTag>(150, 540, std::to_string(cache.stepCount), 30, WHITE, 3);
+    f.createText(38, 580, "Best:", 30, LIGHTGRAY, 3);
+    f.createTextWithTag<BestCounterTag>(140, 580, 
         (cache.bestRecords[cache.diskCount] == 0) ?
         "--" :
         std::to_string(cache.bestRecords[cache.diskCount]), 30, WHITE, 3);
@@ -146,6 +183,13 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
 
     // X按钮
     auto exit = f.createInstantButton(panelX + 580, panelY + 300, 50, 50, 5);
+
+    auto& exitSS = reg.emplace<SpriteStates>(exit);
+    exitSS.width = 50;
+    exitSS.height = 50;
+    exitSS.textures[0]                              = LoadTexture("assets/Texture/cancelButton.png");
+    exitSS.textures[(int)ButtonVisual::Pressed]     = LoadTexture("assets/Texture/cancelButtonPressed.png");
+
     reg.emplace<PanelCloseTag>(exit);
     reg.emplace<SettingsPanelChildTag>(exit);
 }

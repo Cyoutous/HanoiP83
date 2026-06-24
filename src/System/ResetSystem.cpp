@@ -16,6 +16,7 @@
 #include "Component/DiskData.h"
 #include "Component/HistoryEntry.h"
 #include "Component/Tags.h"
+#include "Component/ToggleState.h"
 #include "Event/ButtonClickedEvent.h"
 #include "Event/SessionStateChangedEvent.h"
 
@@ -62,6 +63,11 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
         newDiskCount = next.diskCount;
         newAutoDemo = next.autoDemo;
         next.autoDemo = false;  // 消耗掉自动演示标记
+
+        auto toggleView = reg.view<ToggleState, AutoDemoButtonTag>();
+        for (auto [tEntity, tog] : toggleView.each()) {
+            tog.visual = ToggleVisual::Off;
+        }
     }
 
     // 清空所有柱子栈

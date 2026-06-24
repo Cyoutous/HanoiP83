@@ -12,6 +12,7 @@
 #include "Component/NeedleState.h"
 #include "Component/ButtonState.h"
 #include "Component/ToggleState.h"
+#include "Component/IndicatorState.h"
 
 std::string_view RenderSystem::name() const { 
     return "render"; 
@@ -55,6 +56,8 @@ void RenderSystem::onUpdate(entt::registry& reg, Resource& res) {
                 key = (int)btn->visual;
             } else if (auto* tog = reg.try_get<ToggleState>(entity)) {
                 key = (int)tog->visual;
+            } else if (auto* ind = reg.try_get<const IndicatorState>(entity)) {
+                key = (int)ind->visual;
             }
 
             Texture2D tex = ss->textures.count(key) ? ss->textures[key] : ss->textures[0];

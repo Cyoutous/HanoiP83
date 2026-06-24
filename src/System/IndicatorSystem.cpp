@@ -4,6 +4,7 @@
 #include "Component/NextSessionConfig.h"
 #include "Component/RectVisual.h"
 #include "Component/Tags.h"
+#include "Component/IndicatorState.h"
 
 std::string_view IndicatorSystem::name() const { return "indicator"; }
 Phase IndicatorSystem::phase() const { return Phase::Logic; }
@@ -20,13 +21,13 @@ void IndicatorSystem::onUpdate(entt::registry& reg, Resource& res) {
     bool diskChanged = (next.diskCount != session.diskCount);
     bool autoDemo    = next.autoDemo;
 
-    auto diskIndicators = reg.view<RectVisual, DiskCountIndicatorTag>();
-    for (auto [entity, vis] : diskIndicators.each()) {
-        vis.color = diskChanged ? GREEN : DARKGRAY;
+    auto diskView = reg.view<IndicatorState, DiskCountIndicatorTag>();
+    for (auto [entity, state] : diskView.each()) {
+        state.visual = diskChanged ? IndicatorVisual::On : IndicatorVisual::Off;
     }
 
-    auto autoIndicators = reg.view<RectVisual, AutoDemoIndicatorTag>();
-    for (auto [entity, vis] : autoIndicators.each()) {
-        vis.color = autoDemo ? GREEN : DARKGRAY;
+    auto autoView = reg.view<IndicatorState, AutoDemoIndicatorTag>();
+    for (auto [entity, state] : autoView.each()) {
+        state.visual = autoDemo ? IndicatorVisual::On : IndicatorVisual::Off;
     }
 }

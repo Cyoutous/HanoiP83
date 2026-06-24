@@ -18,6 +18,7 @@
 
 #include "Component/ButtonState.h"
 #include "Component/ToggleState.h"
+#include "Component/IndicatorState.h"
 #include "Component/TextLabel.h"
 #include "Component/Panel.h"
 
@@ -100,8 +101,13 @@ entt::entity EntityFactory::createBestRecord() {
 entt::entity EntityFactory::createBackground() {
     auto entity = reg.create();
     reg.emplace<Position>(entity, 640.0f, 360.0f);        // 逻辑屏幕中心
-    reg.emplace<RectVisual>(entity, 1280.0f, 720.0f, Color{30, 30, 30, 255});
     reg.emplace<Layer>(entity, 0);
+    //reg.emplace<RectVisual>(entity, 1280.0f, 720.0f, Color{30, 30, 30, 255});
+    auto& ss = reg.emplace<SpriteStates>(entity);
+    ss.width = 1280.0f;
+    ss.height = 720.0f;
+    ss.textures[0] = LoadTexture("assets/Texture/background.png");
+
     return entity;
 }
 
@@ -111,7 +117,7 @@ entt::entity EntityFactory::createBackground() {
 entt::entity EntityFactory::createInstantButton(float x, float y, float w, float h, int layer) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, w, h, DARKGRAY);
+    //reg.emplace<RectVisual>(entity, w, h, DARKGRAY);
     reg.emplace<Layer>(entity, layer);
     reg.emplace<Clickable>(entity, Vector2{-w / 2, -h / 2}, w, h);
     reg.emplace<ButtonState>(entity);
@@ -123,7 +129,7 @@ entt::entity EntityFactory::createInstantButton(float x, float y, float w, float
 entt::entity EntityFactory::createToggleButton(float x, float y, float w, float h, int layer) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, w, h, DARKGRAY);
+    //reg.emplace<RectVisual>(entity, w, h, DARKGRAY);
     reg.emplace<Layer>(entity, layer);
     reg.emplace<Clickable>(entity, Vector2{-w / 2, -h / 2}, w, h);
     reg.emplace<ToggleState>(entity);
@@ -173,8 +179,15 @@ entt::entity EntityFactory::createOverlay(float x, float y, float w, float h, in
 entt::entity EntityFactory::createIndicator(float x, float y, int layer) {
     auto entity = reg.create();
     reg.emplace<Position>(entity, x, y);
-    reg.emplace<RectVisual>(entity, 10.0f, 10.0f, DARKGRAY);
     reg.emplace<Layer>(entity, layer);
+    //reg.emplace<RectVisual>(entity, 15.0f, 15.0f, DARKGRAY);
+    auto& ss = reg.emplace<SpriteStates>(entity);
+    ss.width = 15; ss.height = 15;
+    ss.textures[0] = LoadTexture("assets/Texture/indicatorOff.png");
+    ss.textures[1] = LoadTexture("assets/Texture/indicatorOn.png");
+
+    reg.emplace<IndicatorState>(entity);
+
     return entity;
 }
 

@@ -18,18 +18,19 @@ Phase ButtonSystem::phase() const {
 
 void ButtonSystem::onUpdate(entt::registry& reg, Resource& res) {
     // === 即时按钮（有 ButtonState，无 ToggleState）===
-    auto instantView = reg.view<ButtonState, const InputResponse>();
-    for (auto [entity, btn, input] : instantView.each()) {
-        if (input.clicked) {
+    auto instantView = reg.view<ButtonState>();
+    for (auto [entity, btn] : instantView.each()) {
+        auto* input = reg.try_get<const InputResponse>(entity);
+        if (input && input->clicked) {
             btn.visual = ButtonVisual::Idle;
             res.events.trigger(ButtonClickedEvent{entity});
-            res.events.trigger(SettingsButtonEvent{entity});
-        } else if (input.pressed) {
+        } else if (input && input->pressed) {
             btn.visual = ButtonVisual::Pressed;
         } else {
             btn.visual = ButtonVisual::Idle;
         }
     }
+
 
     // === 二态按钮（有 ToggleState）===
     auto toggleView = reg.view<ToggleState, const InputResponse>();
