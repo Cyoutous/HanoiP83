@@ -118,7 +118,7 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
             if (stack.disks.empty()) {
                 // 点空柱 → 闪一下
                 state.visual = NeedleVisual::Selected;
-                state.autoDeselectTimer = 0.3f;
+                state.autoDeselectTimer = 0.15f;
             } else {
                 selectNeedle(reg, res, entity);
             }
@@ -159,7 +159,7 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
             // 非法 → 目标柱红闪
             auto& targetState = reg.get<NeedleState>(entity);
             targetState.visual = NeedleVisual::InvalidTarget;
-            targetState.autoDeselectTimer = 0.3f;
+            targetState.autoDeselectTimer = 0.15f;
         }
     }
 

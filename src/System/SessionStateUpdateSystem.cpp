@@ -2,6 +2,7 @@
 
 #include "Core/Resource.h"
 #include "Component/SessionState.h"
+#include "Component/NextSessionConfig.h"
 #include "Component/BestRecord.h"
 #include "Component/TextLabel.h"
 #include "Component/Tags.h"
@@ -27,9 +28,14 @@ void SessionStateUpdateSystem::onSessionStateChanged(SessionStateChangedEvent&) 
     }
 
     auto diskView = reg.view<TextLabel, DiskCountTag>();
-    for (auto [entity, label] : diskView.each()) {
-        label.text = std::to_string(session.diskCount);
+    auto nextView = reg.view<const NextSessionConfig>();
+    if (nextView.begin() != nextView.end()) {
+        int nextDisk = reg.get<const NextSessionConfig>(*nextView.begin()).diskCount;
+        for (auto [entity, label] : diskView.each()) {
+            label.text = std::to_string(nextDisk);
+        }
     }
+
 }
 
 void SessionStateUpdateSystem::onBestRecordChanged(BestRecordChangedEvent&) {
