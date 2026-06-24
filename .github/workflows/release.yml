@@ -33,13 +33,22 @@ jobs:
       - name: Install Linux deps
         if: runner.os == 'Linux'
         run: |
-          sudo killall apt-get apt 2>/dev/null || true
-          while sudo fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 2; done
+          sudo systemctl stop unattended-upgrades 2>/dev/null || true
+          sudo rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock*
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev
+          sudo apt-get install -y libgl1-mesa-dev libx11-dev libx11-xcb-dev libfontenc-dev \
+            libice-dev libsm-dev libxau-dev libxaw7-dev libxcomposite-dev libxdamage-dev \
+            libxkbfile-dev libxmu-dev libxmuu-dev libxpm-dev libxres-dev libxss-dev \
+            libxt-dev libxtst-dev libxv-dev libxxf86vm-dev libxcb-glx0-dev libxcb-render0-dev \
+            libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev \
+            libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev \
+            libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev uuid-dev \
+            libxcb-cursor-dev libxcb-dri2-0-dev libxcb-present-dev libxcb-composite0-dev \
+            libxcb-ewmh-dev libxcb-res0-dev libxcursor-dev libxrandr-dev libxinerama-dev \
+            libxi-dev libasound2-dev
 
       - name: Conan install
-        run: conan install . --output-folder=. --build=missing -s build_type=Release -c tools.system.package_manager:mode=install
+        run: conan install . --output-folder=. --build=missing -s build_type=Release
 
       - name: CMake configure
         run: cmake --preset conan-default
