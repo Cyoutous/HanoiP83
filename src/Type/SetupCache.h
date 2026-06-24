@@ -19,6 +19,10 @@ struct SetupCache {
     bool isAutoDemo = false;
     bool completed = false;
 
+    float elapsedTime = 0.0f;
+    bool timerRunning = false;
+    bool timeUp = false;
+
     // NextSessionConfig
     int nextDiskCount = 3;
     bool nextAutoDemo = false;
@@ -28,6 +32,7 @@ struct SetupCache {
 
     // BestRecord
     std::unordered_map<int, int> bestRecords;
+    std::unordered_map<int, float> bestTimes;
 
     SetupCache();
 };
@@ -41,5 +46,6 @@ inline SetupCache::SetupCache() {
 
     for (int d = 3; d <= 10; ++d) {
         bestRecords[d] = 0;
+        //bestTimes[d] = 0.0f;
     }
 }

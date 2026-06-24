@@ -1,5 +1,7 @@
 #include "SessionStateUpdateSystem.h"
 
+#include "raylib.h"
+
 #include "Core/Resource.h"
 #include "Component/SessionState.h"
 #include "Component/NextSessionConfig.h"
@@ -35,7 +37,49 @@ void SessionStateUpdateSystem::onSessionStateChanged(SessionStateChangedEvent&) 
             label.text = std::to_string(nextDisk);
         }
     }
+    
 
+    // 计时器
+    auto timerView = reg.view<TextLabel, TimerDisplayTag>();
+    for (auto [entity, label] : timerView.each()) {
+        if (session.timeUp) {
+            label.text = "TIME UP";
+            label.color = RED;
+        } else if (session.completed) {
+            label.color = GREEN;
+        } else if (session.timerRunning) {
+            auto it = _res->timeLimits.find(session.diskCount);
+            float limit = (it != _res->timeLimits.end()) ? it->second : 9999.0f;
+            int remaining = (int)(limit - session.elapsedTime);
+            label.text = std::to_string(remaining) + "s";
+            label.color = WHITE;
+        } else {
+            label.text = "--";
+            label.color = LIGHTGRAY;
+        }
+    }
+
+    //刷新最佳记录标签
+    auto bestView = reg.view<const BestRecord>();
+    if (bestView.begin() != bestView.end()) {
+        auto& best = reg.get<const BestRecord>(*bestView.begin());
+
+        auto it = best.record.find(session.diskCount);
+        std::string stepDisplay = (it != best.record.end() && it->second > 0)
+            ? std::to_string(it->second) : "--";
+        auto stepView = reg.view<TextLabel, BestCounterTag>();
+        for (auto [entity, label] : stepView.each()) {
+            label.text = stepDisplay;
+        }
+
+        auto timeIt = best.bestTimes.find(session.diskCount);
+        std::string timeDisplay = (timeIt != best.bestTimes.end() && timeIt->second > 0.0f)
+            ? TextFormat("%.1fs", timeIt->second) : "--";
+        auto timeView = reg.view<TextLabel, BestTimeTag>();
+        for (auto [entity, label] : timeView.each()) {
+            label.text = timeDisplay;
+        }
+    }
 }
 
 void SessionStateUpdateSystem::onBestRecordChanged(BestRecordChangedEvent&) {
@@ -59,10 +103,19 @@ void SessionStateUpdateSystem::onBestRecordChanged(BestRecordChangedEvent&) {
     for (auto [entity, label] : view.each()) {
         label.text = display;
     }
+
+    auto timeView = reg.view<TextLabel, BestTimeTag>();
+    auto timeIt = best.bestTimes.find(session.diskCount);
+    std::string timeDisplay = (timeIt != best.bestTimes.end() && timeIt->second > 0.0f)
+        ? TextFormat("%.1fs", timeIt->second) : "--";
+    for (auto [entity, label] : timeView.each()) {
+        label.text = timeDisplay;
+    }
 }
 
 void SessionStateUpdateSystem::onStart(entt::registry& reg, Resource& res) {
     _reg = &reg;
+    _res = &res;
 
     res.events.sink<SessionStateChangedEvent>()
         .connect<&SessionStateUpdateSystem::onSessionStateChanged>(*this);

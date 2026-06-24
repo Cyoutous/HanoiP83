@@ -1,5 +1,7 @@
 #include "GamePhaseSystem.h"
 
+#include <climits>
+
 #include "Core/Resource.h"
 #include "Component/SessionState.h"
 #include "Component/BestRecord.h"
@@ -7,8 +9,13 @@
 #include "Component/NeedleIndex.h"
 #include "Event/BestRecordChangedEvent.h"
 
-std::string_view GamePhaseSystem::name() const { return "gamePhase"; }
-Phase GamePhaseSystem::phase() const { return Phase::FixedUpdate; }
+std::string_view GamePhaseSystem::name() const { 
+    return "gamePhase"; 
+}
+
+Phase GamePhaseSystem::phase() const { 
+    return Phase::FixedUpdate; 
+}
 
 void GamePhaseSystem::onUpdate(entt::registry& reg, Resource& res) {
     // 找 SessionState — 空则退
@@ -46,15 +53,29 @@ void GamePhaseSystem::onUpdate(entt::registry& reg, Resource& res) {
     auto& best = reg.get<BestRecord>(bestEntity);
 
     auto it = best.record.find(session.diskCount);
-    bool newRecord = (it == best.record.end() || session.stepCount < it->second);
-    bool matched   = (it != best.record.end() && session.stepCount == it->second);
+    int stepBest = (it != best.record.end()) ? it->second : INT_MAX;
 
-    if (newRecord) {
+    bool changed = false;
+
+    if (session.stepCount < stepBest) {
+        // 新步数纪录 → 同时覆盖步数和时间
         best.record[session.diskCount] = session.stepCount;
+        if (session.timerRunning) {
+            best.bestTimes[session.diskCount] = session.elapsedTime;
+        }
+        changed = true;
+    } else if (session.stepCount == stepBest && session.timerRunning) {
+        // 步数持平 → 比较时间
+        auto timeIt = best.bestTimes.find(session.diskCount);
+        if (timeIt == best.bestTimes.end() || session.elapsedTime < timeIt->second) {
+            best.bestTimes[session.diskCount] = session.elapsedTime;
+            changed = true;
+        }
     }
 
-    if (newRecord || matched) {
-        res.events.trigger<BestRecordChangedEvent>();
+    if (changed) {
+        res.events.trigger(BestRecordChangedEvent{});
     }
+
 
 }

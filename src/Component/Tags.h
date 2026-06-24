@@ -3,6 +3,8 @@
 struct StepCounterTag { };
 struct BestCounterTag { };
 struct DiskCountTag { };
+struct BestTimeTag { };
+struct TimerDisplayTag { };
 
 struct ResetButtonTag {};
 struct AutoDemoButtonTag {};

@@ -1,8 +1,16 @@
 #include "NextSessionConfigSystem.h"
+
 #include <algorithm>
+#include "raylib.h"
+
 #include "Core/Resource.h"
+
 #include "Component/NextSessionConfig.h"
 #include "Component/Tags.h"
+#include "Component/BestRecord.h"
+#include "Component/TextLabel.h"
+#include "Component/Tags.h" 
+
 #include "Event/ButtonClickedEvent.h"
 #include "Event/ToggleChangedEvent.h"
 

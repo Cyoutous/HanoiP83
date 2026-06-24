@@ -32,10 +32,14 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
     session.stepCount  = cache.stepCount;
     session.isAutoDemo = cache.isAutoDemo;
     session.completed  = cache.completed;
+    session.elapsedTime  = cache.elapsedTime;
+    session.timerRunning = cache.timerRunning;
+    session.timeUp       = cache.timeUp;
 
     auto bestView = reg.view<BestRecord>();
     if (bestView.begin() != bestView.end()) {
         reg.get<BestRecord>(*bestView.begin()).record = cache.bestRecords;
+        reg.get<BestRecord>(*bestView.begin()).bestTimes = cache.bestTimes;
     }
 
     // 背景
@@ -103,6 +107,14 @@ void SceneSetup::build(entt::registry& reg, Resource& res) {
         std::to_string(cache.bestRecords[cache.diskCount]), 30, WHITE, 3);
 
     f.createTextWithTag<DiskCountTag>(125, 642, std::to_string(cache.diskCount), 36, BLUE, 3);
+
+    f.createTextWithTag<TimerDisplayTag>(640, 30, "--", 24, LIGHTGRAY, 3);
+    f.createTextWithTag<BestTimeTag>(640, 580, 
+        (cache.bestTimes.count(cache.diskCount) && cache.bestTimes[cache.diskCount] > 0.0f) 
+            ? TextFormat("%.1fs", cache.bestTimes[cache.diskCount]) : "--", 
+        30, WHITE, 3);
+
+
     
     // 设置面板
     const float panelX = 2560.0f;

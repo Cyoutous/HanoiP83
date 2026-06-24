@@ -76,6 +76,9 @@ void SaveManager::load(Resource& res) {
             else if (key == "stepCount")     cache.stepCount     = std::stoi(val);
             else if (key == "isAutoDemo")    cache.isAutoDemo    = (val == "1");
             else if (key == "completed")     cache.completed     = (val == "1");
+            else if (key == "elapsedTime")   cache.elapsedTime   = std::stof(val);
+            else if (key == "timerRunning")  cache.timerRunning  = (val == "1");
+            else if (key == "timeUp")        cache.timeUp = (val == "1");
             else if (key == "nextDiskCount") cache.nextDiskCount = std::stoi(val);
             else if (key == "nextAutoDemo")  cache.nextAutoDemo  = (val == "1");
             else if (key == "n0") cache.needles[0].diskSizes = parseDisks(val);
@@ -88,14 +91,24 @@ void SaveManager::load(Resource& res) {
     if (fileExists(bestPath())) {
         std::ifstream in(bestPath());
         cache.bestRecords.clear();
+        cache.bestTimes.clear();
         std::string line;
         while (std::getline(in, line)) {
             if (line.empty()) continue;
             auto eq = line.find('=');
             if (eq == std::string::npos) continue;
-            int k = std::stoi(line.substr(0, eq));
-            int v = std::stoi(line.substr(eq + 1));
-            cache.bestRecords[k] = v;
+
+            std::string prefix = line.substr(0, eq);
+            std::string val    = line.substr(eq + 1);
+
+            if (prefix.find("steps.") == 0) {
+                int k = std::stoi(prefix.substr(6));
+                cache.bestRecords[k] = std::stoi(val);
+            } else if (prefix.find("time.") == 0) {
+                int k = std::stoi(prefix.substr(5));
+                cache.bestTimes[k] = std::stof(val);
+            }
+
         }
     }
 }
@@ -137,20 +150,26 @@ void SaveManager::save(entt::registry& reg) {
         }
         else {
             // 不处于自动演示状态
+            auto sessionView = reg.view<const SessionState>();
             if (sessionView.begin() != sessionView.end()) {
                 auto& s = reg.get<const SessionState>(*sessionView.begin());
                 out << "diskCount="  << s.diskCount  << "\n";
                 out << "stepCount="  << s.stepCount  << "\n";
                 out << "isAutoDemo=" << (s.isAutoDemo ? 1 : 0) << "\n";
                 out << "completed="  << (s.completed  ? 1 : 0) << "\n";
+                out << "elapsedTime="  << s.elapsedTime  << "\n";
+                out << "timerRunning=" << (s.timerRunning ? 1 : 0) << "\n";
+                out << "timeUp=" << (s.timeUp ? 1 : 0) << "\n";
+
             }
-    
+
+            auto nextView = reg.view<const NextSessionConfig>();
             if (nextView.begin() != nextView.end()) {
                 auto& n = reg.get<const NextSessionConfig>(*nextView.begin());
                 out << "nextDiskCount=" << n.diskCount << "\n";
                 out << "nextAutoDemo="  << (n.autoDemo ? 1 : 0) << "\n";
             }
-    
+
             auto needleView = reg.view<const NeedleStack, const NeedleIndex>();
             std::vector<std::pair<int, std::string>> needleLines;
             for (auto [entity, stack, idx] : needleView.each()) {
@@ -172,11 +191,14 @@ void SaveManager::save(entt::registry& reg) {
     {
         std::ofstream out(bestPath());
         auto bestView = reg.view<const BestRecord>();
-        if (bestView.begin() != bestView.end()) {
-            auto& b = reg.get<const BestRecord>(*bestView.begin());
-            for (auto& [k, v] : b.record) {
-                if (v > 0) out << k << "=" << v << "\n";
-            }
+        if (bestView.begin() == bestView.end()) return;
+
+        auto& b = reg.get<const BestRecord>(*bestView.begin());
+        for (auto& [k, v] : b.record) {
+            if (v > 0) out << "steps." << k << "=" << v << "\n";
+        }
+        for (auto& [k, v] : b.bestTimes) {
+            if (v > 0.0f) out << "time." << k << "=" << v << "\n";
         }
     }
 }

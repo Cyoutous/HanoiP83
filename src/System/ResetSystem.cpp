@@ -104,6 +104,10 @@ void ResetSystem::onButtonClicked(ButtonClickedEvent& event) {
     auto& newSession = reg.get<SessionState>(newSessionEntity);
     newSession.isAutoDemo = newAutoDemo;
 
+    newSession.elapsedTime = 0.0f;
+    newSession.timerRunning = false;
+    newSession.timeUp = false;
+
     // ── 左柱重建盘子 ──
     auto needleView = reg.view<const NeedleIndex>();
     entt::entity leftNeedle = entt::null;

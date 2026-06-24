@@ -83,12 +83,12 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
 
     // 读 SessionState — 自动演示或已完成时禁交互
     auto sessionView = reg.view<const SessionState>();
-    if (sessionView.begin() != sessionView.end()) {
-        auto& session = reg.get<const SessionState>(*sessionView.begin());
-        if (session.isAutoDemo || session.completed) {
-            if (_selectedNeedle != entt::null) deselectNeedle(reg, res);
-            return;
-        }
+    if (sessionView.begin() == sessionView.end()) return;
+    auto& session = reg.get<SessionState>(*sessionView.begin());
+
+    if (session.isAutoDemo || session.completed || session.timeUp) {
+        if (_selectedNeedle != entt::null) deselectNeedle(reg, res);
+        return;
     }
 
     if (hasActiveAnimation(reg)) return;
@@ -120,6 +120,11 @@ void NeedleInteractionSystem::onUpdate(entt::registry& reg, Resource& res) {
                 state.visual = NeedleVisual::Selected;
                 state.autoDeselectTimer = 0.15f;
             } else {
+                // 首次点击柱子时启动计时
+                if (!session.timerRunning && !session.timeUp && !session.completed && !session.isAutoDemo) {
+                    session.timerRunning = true;
+                }
+
                 selectNeedle(reg, res, entity);
             }
             continue;

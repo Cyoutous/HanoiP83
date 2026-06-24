@@ -30,6 +30,13 @@ struct Resource
     float diskFloatOffset = 30.0f;     
     float needleHeight    = 280.0f;
     float diskBaseOffset  = needleHeight / 2.0f - diskHeight/ 2.0f;
+
+    const std::unordered_map<int, float> timeLimits = {
+    {3, 30.0f}, {4, 45.0f}, {5, 60.0f},
+    {6, 80.0f}, {7, 100.0f}, {8, 130.0f},
+    {9, 160.0f}
+    };
+    float defaultLimit = 9999.0f;
     
     Resource(entt::registry& reg)
         : factory(reg, *this) {};

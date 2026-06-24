@@ -12,6 +12,7 @@ struct Resource;
 class SessionStateUpdateSystem : public ISystem {
 
     entt::registry* _reg = nullptr; // AI写的指针
+    Resource* _res = nullptr;
 
     void onSessionStateChanged(SessionStateChangedEvent&);
     void onBestRecordChanged(BestRecordChangedEvent&);

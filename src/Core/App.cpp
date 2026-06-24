@@ -18,6 +18,7 @@
 #include "System/MoveSnapshotSystem.h"
 #include "System/MoveExecutionSystem.h"
 #include "System/GamePhaseSystem.h"
+#include "System/TimerSystem.h"
 #include "System/AutoDemoSystem.h"
 #include "System/ResetSystem.h"
 #include "System/NextSessionConfigSystem.h"
@@ -47,6 +48,7 @@ App::App()
     scheduler.add(std::make_unique<MoveSnapshotSystem>());
     scheduler.add(std::make_unique<MoveExecutionSystem>());
     scheduler.add(std::make_unique<GamePhaseSystem>());
+    scheduler.add(std::make_unique<TimerSystem>());
     scheduler.add(std::make_unique<AutoDemoSystem>());
     scheduler.add(std::make_unique<ResetSystem>());
     scheduler.add(std::make_unique<NextSessionConfigSystem>());
