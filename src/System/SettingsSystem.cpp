@@ -163,8 +163,8 @@ void SettingsSystem::updateDisplay(entt::registry& reg) {
 void SettingsSystem::onStart(entt::registry& reg, Resource& res) {
     _reg = &reg;
     _res = &res;
-    res.events.sink<ButtonClickedEvent>()
-        .connect<&SettingsSystem::onButtonClicked>(*this); 
+    // res.events.sink<ButtonClickedEvent>()
+    //     .connect<&SettingsSystem::onButtonClicked>(*this); 
 
     _onStartCalled = true;
 }
