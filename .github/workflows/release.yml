@@ -53,12 +53,20 @@ jobs:
       - name: CMake configure
         shell: bash
         run: |
+          TC=""
           if [ -f build/build/generators/conan_toolchain.cmake ]; then
             TC="build/build/generators/conan_toolchain.cmake"
             BUILD_DIR="build/build"
-          else
+          elif [ -f build/Release/generators/conan_toolchain.cmake ]; then
+            TC="build/Release/generators/conan_toolchain.cmake"
+            BUILD_DIR="build/Release"
+          elif [ -f build/generators/conan_toolchain.cmake ]; then
             TC="build/generators/conan_toolchain.cmake"
             BUILD_DIR="build"
+          else
+            echo "ERROR: conan_toolchain.cmake not found"
+            find build -name conan_toolchain.cmake 2>/dev/null || true
+            exit 1
           fi
           echo "BUILD_DIR=$BUILD_DIR" >> $GITHUB_ENV
           cmake -B "$BUILD_DIR" -DCMAKE_TOOLCHAIN_FILE="$TC" -DCMAKE_BUILD_TYPE=Release
