@@ -4,6 +4,11 @@
 
 ![HanoiP83](assets/Texture/cover.png)
 
+## 下载
+
+预编译版本请前往 [Releases](https://github.com/Cyoutous/HanoiP83/releases) 页面下载对应平台的 ZIP 包。
+
+
 ## 功能
 
 - 经典三柱汉诺塔，支持 3–9 层盘子

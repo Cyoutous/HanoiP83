@@ -6,6 +6,9 @@ on:
       - "v*.*.*"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
@@ -79,13 +82,27 @@ jobs:
         run: |
           SRC="${{ env.BUILD_DIR }}"
           if [ -d "$SRC/Release" ]; then SRC="$SRC/Release"; fi
-          mkdir dist
+
+          mkdir -p dist
+
+          # --- 复制可执行文件 ---
           if [ -f "$SRC/hanoip83.exe" ]; then
             cp "$SRC/hanoip83.exe" dist/
+            # Windows：复制所有 DLL（raylib.dll 等）
+            cp "$SRC/"*.dll dist/ 2>/dev/null || true
           elif [ -f "$SRC/hanoip83" ]; then
             cp "$SRC/hanoip83" dist/
+            # Linux / macOS：复制可能的运行时库
+            cp "$SRC/"*.so dist/ 2>/dev/null || true
+            cp "$SRC/"*.dylib dist/ 2>/dev/null || true
           fi
+
+          # --- 复制 assets ---
           cp -r assets dist/
+
+          # --- 验证 ---
+          echo "dist contents:"
+          find dist -type f | sort
 
       - name: Create ZIP (Windows)
         if: runner.os == 'Windows'
@@ -102,6 +119,38 @@ jobs:
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.artifact }}.zip
+
+      - name: Clean old release assets (keep only .zip)
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPO="${{ github.repository }}"
+          TAG="${{ github.ref_name }}"
+
+          # 获取 release ID
+          RELEASE_ID=$(curl -sS -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/repos/$REPO/releases/tags/$TAG" | jq -r '.id')
+
+          if [ "$RELEASE_ID" = "null" ] || [ -z "$RELEASE_ID" ]; then
+            echo "No existing release found for tag $TAG, skipping cleanup"
+            exit 0
+          fi
+
+          echo "Release ID: $RELEASE_ID"
+
+          # 删除所有非 .zip 的资产（PNG、裸 exe、LICENSE 等旧版 broken workflow 遗留文件）
+          curl -sS -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/repos/$REPO/releases/$RELEASE_ID/assets" | \
+            jq -r '.[] | select(.name | test("\\.zip$") | not) | "\(.id) \(.name)"' | \
+            while read asset_id asset_name; do
+              echo "Deleting old asset: $asset_name (id=$asset_id)"
+              curl -sS -X DELETE -H "Authorization: token $GH_TOKEN" \
+                "https://api.github.com/repos/$REPO/releases/assets/$asset_id"
+            done
+
+          echo "Cleanup done"
 
       - name: Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
