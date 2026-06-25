@@ -80,17 +80,31 @@ jobs:
           SRC="${{ env.BUILD_DIR }}"
           if [ -d "$SRC/Release" ]; then SRC="$SRC/Release"; fi
           mkdir dist
-          cp "$SRC"/*.exe dist/ 2>/dev/null || cp "$SRC"/*hanoip83* dist/ 2>/dev/null || true
-          cp -r assets dist/ 2>/dev/null || true
+          if [ -f "$SRC/hanoip83.exe" ]; then
+            cp "$SRC/hanoip83.exe" dist/
+          elif [ -f "$SRC/hanoip83" ]; then
+            cp "$SRC/hanoip83" dist/
+          fi
+          cp -r assets dist/
+
+      - name: Create ZIP (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: powershell Compress-Archive -Path dist\* -DestinationPath ${{ matrix.artifact }}.zip
+
+      - name: Create ZIP (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: cd dist && zip -r ../${{ matrix.artifact }}.zip .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: dist
+          path: ${{ matrix.artifact }}.zip
 
       - name: Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/**
+          files: ${{ matrix.artifact }}.zip
